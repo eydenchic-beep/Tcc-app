@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsychoTrainer — Cabinet de Formation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1410;--paper:#f5f0e8;--cream:#ede7d9;--sage:#6b8c7a;--sage-light:#a8c4b2;--terra:#c4714a;--gold:#b8963e;--muted:#8a7f72;--border:#d4cdc3;--card:#faf7f2;--err:#c44a4a;--ok:#4a8c6a;--violet:#7a6b8c;--blue:#4a6b8c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;min-height:100vh;background:var(--ink);color:var(--paper);display:flex;flex-direction:column;padding:1.25rem 1rem;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.logo{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;color:var(--cream)}
+.logo-sub{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:1.5rem}
+.nlbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--muted);margin:0.75rem 0 0.3rem}
+.nb{display:flex;align-items:center;gap:0.55rem;width:100%;padding:0.5rem 0.6rem;background:none;border:none;color:#c8c0b5;cursor:pointer;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.8rem;text-align:left;transition:all 0.2s;margin-bottom:0.12rem}
+.nb:hover{background:rgba(255,255,255,0.07);color:var(--paper)}
+.nb.active{background:rgba(107,140,122,0.25);color:var(--sage-light)}
+.ni{font-size:0.95rem;width:17px;text-align:center}
+.sf{margin-top:auto;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.08)}
+.pbw{background:rgba(255,255,255,0.08);border-radius:99px;height:5px;margin:0.35rem 0}
+.pbf{height:100%;border-radius:99px;background:var(--sage);transition:width 0.5s}
+.sd{font-size:0.72rem;color:var(--sage-light)}
+.main{margin-left:240px;flex:1;padding:1.75rem 2.25rem;max-width:calc(100% - 240px)}
+.sec{display:none}.sec.active{display:block}
+.ph{margin-bottom:1.5rem;padding-bottom:1.1rem;border-bottom:1px solid var(--border)}
+.pt{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:600;letter-spacing:-0.02em}
+.ps{color:var(--muted);font-size:0.85rem;margin-top:0.25rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin-bottom:1rem}
+.ct{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;margin-bottom:0.85rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.85rem}
+.tag{display:inline-block;padding:0.16rem 0.6rem;border-radius:99px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em}
+.ts{background:rgba(107,140,122,0.15);color:var(--sage)}
+.tt{background:rgba(196,113,74,0.15);color:var(--terra)}
+.tg{background:rgba(184,150,62,0.15);color:var(--gold)}
+.te{background:rgba(196,74,74,0.15);color:var(--err)}
+.tv{background:rgba(122,107,140,0.15);color:var(--violet)}
+.tb{background:rgba(74,107,140,0.15);color:var(--blue)}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;transition:all 0.2s}
+.bp{background:var(--sage);color:white}.bp:hover{background:#5a7a6a;transform:translateY(-1px)}
+.bs{background:transparent;color:var(--ink);border:1px solid var(--border)}.bs:hover{background:var(--cream)}
+.bt{background:var(--terra);color:white}.bt:hover{background:#b06040}
+.bv{background:var(--violet);color:white}.bv:hover{background:#6a5a7a}
+.bsm{padding:0.32rem 0.8rem;font-size:0.76rem}
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:1.4rem;flex-wrap:wrap}
+.tab{padding:0.5rem 1rem;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+.tab.active{color:var(--sage);border-bottom-color:var(--sage);font-weight:500}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;text-align:center}
+.sn{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--sage)}
+.sl{font-size:0.75rem;color:var(--muted);margin-top:0.2rem}
+.opt{display:flex;align-items:flex-start;gap:0.6rem;padding:0.7rem 0.9rem;background:white;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.83rem;margin-bottom:0.45rem;transition:all 0.2s;text-align:left;width:100%;font-family:'DM Sans',sans-serif;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--sage);background:rgba(107,140,122,0.05)}
+.opt.correct{border-color:var(--ok);background:rgba(74,140,106,0.1);color:var(--ok)}
+.opt.wrong{border-color:var(--err);background:rgba(196,74,74,0.07);color:var(--err)}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.fb{padding:0.85rem 1rem;border-radius:8px;margin-top:0.65rem;font-size:0.82rem;line-height:1.6;display:none}
+.fb.show{display:block}
+.fbok{background:rgba(74,140,106,0.09);border:1px solid rgba(74,140,106,0.25)}
+.fberr{background:rgba(196,74,74,0.07);border:1px solid rgba(196,74,74,0.2)}
+.ib{padding:0.8rem 1rem;border-radius:8px;border-left:3px solid;margin-bottom:0.65rem;font-size:0.82rem;line-height:1.6}
+.ibs{background:rgba(107,140,122,0.07);border-color:var(--sage)}
+.ibg{background:rgba(184,150,62,0.07);border-color:var(--gold)}
+.ibt{background:rgba(196,113,74,0.07);border-color:var(--terra)}
+.ibv{background:rgba(122,107,140,0.07);border-color:var(--violet)}
+.ibb{background:rgba(74,107,140,0.07);border-color:var(--blue)}
+.mmap{padding:1.25rem;background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:1rem}
+.mmc{background:var(--ink);color:white;padding:0.6rem 1.3rem;border-radius:99px;font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;display:inline-block;margin-bottom:1.25rem}
+.mmg{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.85rem}
+.mmb{border-radius:10px;padding:0.85rem;font-size:0.8rem}
+.mmbt{font-weight:700;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem}
+.mmi{padding:0.2rem 0;border-bottom:1px solid rgba(0,0,0,0.06);line-height:1.5}
+.mmi:last-child{border:none}
+.bc{background:rgba(196,113,74,0.1);border:1px solid rgba(196,113,74,0.2)}.bc .mmbt{color:var(--terra)}
+.by{background:rgba(196,74,74,0.08);border:1px solid rgba(196,74,74,0.15)}.by .mmbt{color:var(--err)}
+.bd{background:rgba(184,150,62,0.08);border:1px solid rgba(184,150,62,0.18)}.bd .mmbt{color:var(--gold)}
+.btr{background:rgba(107,140,122,0.1);border:1px solid rgba(107,140,122,0.2)}.btr .mmbt{color:var(--sage)}
+.exc{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:1.1rem;cursor:pointer;transition:all 0.22s}
+.exc:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,0.07);border-color:var(--sage-light)}
+.exi{font-size:1.5rem;margin-bottom:0.4rem}
+.ext{font-weight:600;font-size:0.87rem;margin-bottom:0.25rem}
+.exd{font-size:0.76rem;color:var(--muted);line-height:1.5}
+.exdu{font-size:0.7rem;color:var(--sage);font-weight:600;margin-top:0.4rem}
+.mov{display:none;position:fixed;inset:0;background:rgba(26,20,16,0.55);z-index:200;align-items:center;justify-content:center;padding:1.5rem}
+.mov.open{display:flex}
+.mo{background:var(--card);border-radius:14px;padding:1.75rem;max-width:620px;width:100%;max-height:86vh;overflow-y:auto;animation:su 0.3s ease}
+.moh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem}
+.mot{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600}
+.mox{background:none;border:none;cursor:pointer;font-size:1.4rem;color:var(--muted);line-height:1}
+.step{display:flex;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--border)}
+.step:last-child{border:none}
+.stn{width:27px;height:27px;border-radius:50%;background:var(--sage);color:white;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0}
+.stt{font-weight:600;font-size:0.85rem;margin-bottom:0.18rem}
+.std{font-size:0.8rem;color:var(--muted);line-height:1.6}
+.fl{list-style:none}
+.fl li{padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;display:flex;gap:0.45rem}
+.fl li::before{content:'▸';color:var(--sage);flex-shrink:0}
+.fl li:last-child{border:none}
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:11px;overflow:hidden;cursor:pointer;transition:all 0.22s}
+.rcard:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.07);border-color:var(--sage-light)}
+.rfront{padding:1.25rem;min-height:110px;display:flex;flex-direction:column;justify-content:center}
+.rback{padding:1.25rem;background:var(--cream);display:none;font-size:0.82rem;line-height:1.7;white-space:pre-line}
+.rcard.fl2 .rback{display:block}
+.rcard.fl2 .rfront{background:rgba(107,140,122,0.05)}
+.si{padding:0.6rem 0.9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.83rem;outline:none;background:white;width:100%;margin-bottom:1.1rem}
+.si:focus{border-color:var(--sage)}
+.sph{padding:1.25rem;border-radius:12px;margin-bottom:1.25rem;color:white}
+.sp1{background:linear-gradient(135deg,#4a6b8c,#3a5a7a)}
+.sp2{background:linear-gradient(135deg,#7a6b8c,#6a5a7a)}
+.tl{background:white;border:1.5px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:0.65rem}
+.tlt{font-weight:600;font-size:0.87rem;margin-bottom:0.3rem}
+.tlb{font-size:0.8rem;color:var(--muted);line-height:1.6}
+.cp{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;font-size:0.78rem}
+.cpl{width:75px;color:var(--muted);flex-shrink:0}
+.cpt{flex:1;height:5px;background:var(--cream);border-radius:99px;overflow:hidden}
+.cpf{height:100%;border-radius:99px}
+.de{color:var(--ok);font-size:0.73rem;font-weight:700}
+.dm{color:var(--gold);font-size:0.73rem;font-weight:700}
+.dh{color:var(--err);font-size:0.73rem;font-weight:700}
+.tm{color:var(--muted);font-size:0.82rem}.fw{font-weight:600}
+.mb1{margin-bottom:0.5rem}.mb2{margin-bottom:1rem}.mb3{margin-bottom:1.5rem}
+.fl2{display:flex}.gap2{gap:0.7rem}.aic{align-items:center}.jb{justify-content:space-between}
+.hid{display:none!important}
+@keyframes fd{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes su{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+hr{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">PsychoTrainer</div>
+  <div class="logo-sub">Cabinet de Formation</div>
+  <div class="nlbl">Principal</div>
+  <button class="nb active" onclick="nav('dashboard',this)"><span class="ni">🏠</span>Tableau de bord</button>
+  <button class="nb" onclick="nav('cas',this)"><span class="ni">📋</span>Cas cliniques</button>
+  <button class="nb" onclick="nav('qcm',this)"><span class="ni">🎯</span>QCM</button>
+  <div class="nlbl">Contenu</div>
+  <button class="nb" onclick="nav('fiches',this)"><span class="ni">📄</span>Fiches de révision</button>
+  <button class="nb" onclick="nav('cartes',this)"><span class="ni">🗺️</span>Cartes mentales</button>
+  <button class="nb" onclick="nav('methodes',this)"><span class="ni">🔄</span>Méthodes TCC</button>
+  <button class="nb" onclick="nav('exercices',this)"><span class="ni">🧘</span>Exercices (100+)</button>
+  <div class="nlbl">Spécialités</div>
+  <button class="nb" onclick="nav('tdah',this)"><span class="ni">⚡</span>TDAH</button>
+  <button class="nb" onclick="nav('tsa',this)"><span class="ni">🌈</span>TSA</button>
+  <div class="sf">
+    <div class="tm" style="font-size:0.68rem;margin-bottom:0.3rem">Progression globale</div>
+    <div class="pbw"><div class="pbf" id="gProg" style="width:0%"></div></div>
+    <div class="sd" id="gScore">0 pts — Débutant</div>
+  </div>
+</aside>
+<main class="main">
+<!-- DASHBOARD -->
+<div class="sec active" id="s-dashboard">
+<div class="ph"><div class="pt">Tableau de bord</div><div class="ps">Votre espace de formation en psychopratique</div></div>
+<div class="g4 mb2">
+  <div class="sc"><div class="sn" id="d-cas">0</div><div class="sl">Cas traités</div></div>
+  <div class="sc"><div class="sn" id="d-qcm">0%</div><div class="sl">Réussite QCM</div></div>
+  <div class="sc"><div class="sn" id="d-ex">0</div><div class="sl">Exercices faits</div></div>
+  <div class="sc"><div class="sn" id="d-pts">0</div><div class="sl">Points XP</div></div>
+</div>
+<div class="g3 mb2">
+  <div class="card" style="cursor:pointer;border-left:4px solid var(--sage)" onclick="nav('cas',null)"><div style="font-size:1.8rem;margin-bottom:0.4rem">📋</div><div class="fw mb1">Cas cliniques</div><div class="tm">8 cas pratiques avec diagnostic guidé</div></div>
+  <div class="card" style="cursor:pointer;border-left:4px solid var(--terra)" onclick="nav('qcm',null)"><div style="font-size:1.8rem;margin-bottom:0.4rem">🎯</div><div class="fw mb1">QCM interactifs</div><div class="tm">Questions par thématique avec explications</div></div>
+  <div class="card" style="cursor:pointer;border-left:4px solid var(--gold)" onclick="nav('exercices',null)"><div style="font-size:1.8rem;margin-bottom:0.4rem">🧘</div><div class="fw mb1">100+ Exercices</div><div class="tm">Respiration, visualisation, TCC, relaxation…</div></div>
+  <div class="card" style="cursor:pointer;border-left:4px solid var(--violet)" onclick="nav('cartes',null)"><div style="font-size:1.8rem;margin-bottom:0.4rem">🗺️</div><div class="fw mb1">Cartes mentales</div><div class="tm">Causes, symptômes, méthodes par pathologie</div></div>
+  <div class="card" style="cursor:pointer;border-left:4px solid var(--blue)" onclick="nav('tdah',null)"><div style="font-size:1.8rem;margin-bottom:0.4rem">⚡</div><div class="fw mb1">TDAH</div><div class="tm">Fiche complète, outils, exercices, QCM</div></div>
+  <div class="card" style="cursor:pointer;border-left:4px solid #9b6b8c" onclick="nav('tsa',null)"><div style="font-size:1.8rem;margin-bottom:0.4rem">🌈</div><div class="fw mb1">TSA</div><div class="tm">Spectre autistique : diagnostic et accompagnement</div></div>
+</div>
+<div class="card"><div class="ct">📌 Rappel du jour</div>
+  <div class="ib ibs"><strong>Alliance thérapeutique (Bordin, 1979)</strong> — Trois composantes : accord sur les objectifs, accord sur les tâches, lien affectif. C'est le meilleur prédicteur de l'issue thérapeutique, toutes approches confondues.</div>
+  <div class="tm">💡 <em>La relation précède toujours la technique.</em></div>
+</div>
+</div>
+
+<!-- CAS CLINIQUES -->
+<div class="sec" id="s-cas">
+<div class="ph"><div class="pt">Cas Cliniques</div><div class="ps">8 cas pratiques avec diagnostic guidé et feedback détaillé</div></div>
+<div id="cas-lv">
+  <div class="tabs">
+    <button class="tab active" onclick="filterCas('all',this)">Tous</button>
+    <button class="tab" onclick="filterCas('anxiete',this)">Anxiété</button>
+    <button class="tab" onclick="filterCas('depression',this)">Dépression</button>
+    <button class="tab" onclick="filterCas('trauma',this)">Trauma</button>
+    <button class="tab" onclick="filterCas('perso',this)">Personnalité</button>
+    <button class="tab" onclick="filterCas('tca',this)">TCA</button>
+  </div>
+  <div class="g2" id="cas-grid"></div>
+</div>
+<div id="cas-dv" class="hid"></div>
+</div>
+
+<!-- QCM -->
+<div class="sec" id="s-qcm">
+<div class="ph"><div class="pt">QCM Interactifs</div><div class="ps">Testez vos connaissances par thématique</div></div>
+<div class="tabs">
+  <button class="tab active" onclick="loadQCM('diag',this)">Diagnostics DSM-5</button>
+  <button class="tab" onclick="loadQCM('tcc',this)">TCC</button>
+  <button class="tab" onclick="loadQCM('trt',this)">Traitements</button>
+  <button class="tab" onclick="loadQCM('spec',this)">TDAH / TSA</button>
+  <button class="tab" onclick="loadQCM('ethique',this)">Éthique</button>
+</div>
+<div id="qcm-c"></div>
+</div>
+
+<!-- FICHES -->
+<div class="sec" id="s-fiches">
+<div class="ph"><div class="pt">Fiches de Révision</div><div class="ps">Cliquez sur une fiche pour révéler la réponse</div></div>
+<input class="si" placeholder="🔍 Rechercher une fiche…" oninput="filterFiches(this.value)">
+<div class="tabs">
+  <button class="tab active" onclick="showFC('all',this)">Toutes</button>
+  <button class="tab" onclick="showFC('troubles',this)">Troubles</button>
+  <button class="tab" onclick="showFC('tcc',this)">TCC</button>
+  <button class="tab" onclick="showFC('pharmaco',this)">Pharmaco</button>
+  <button class="tab" onclick="showFC('concepts',this)">Concepts</button>
+</div>
+<div class="g3" id="fiches-grid"></div>
+</div>
+
+<!-- CARTES MENTALES -->
+<div class="sec" id="s-cartes">
+<div class="ph"><div class="pt">Cartes Mentales</div><div class="ps">Causes — Symptômes — Diagnostic — Traitements</div></div>
+<div class="tabs">
+  <button class="tab active" onclick="showCarte('tag',this)">TAG</button>
+  <button class="tab" onclick="showCarte('edm',this)">Dépression</button>
+  <button class="tab" onclick="showCarte('tspt',this)">TSPT</button>
+  <button class="tab" onclick="showCarte('tpb',this)">Borderline</button>
+  <button class="tab" onclick="showCarte('toc',this)">TOC</button>
+  <button class="tab" onclick="showCarte('bipo',this)">Bipolaire</button>
+  <button class="tab" onclick="showCarte('schizo',this)">Schizophrénie</button>
+  <button class="tab" onclick="showCarte('phob',this)">Phobies</button>
+</div>
+<div id="carte-c"></div>
+</div>
+
+<!-- MÉTHODES TCC -->
+<div class="sec" id="s-methodes">
+<div class="ph"><div class="pt">Méthodes TCC</div><div class="ps">Outils, techniques et protocoles cognitivo-comportementaux</div></div>
+<div class="tabs">
+  <button class="tab active" onclick="showTCC('base',this)">Bases</button>
+  <button class="tab" onclick="showTCC('cog',this)">Restructuration cognitive</button>
+  <button class="tab" onclick="showTCC('expo',this)">Exposition</button>
+  <button class="tab" onclick="showTCC('comp',this)">Comportemental</button>
+  <button class="tab" onclick="showTCC('vague3',this)">3e vague</button>
+  <button class="tab" onclick="showTCC('proto',this)">Protocoles</button>
+</div>
+<div id="tcc-c"></div>
+</div>
+
+<!-- EXERCICES -->
+<div class="sec" id="s-exercices">
+<div class="ph"><div class="pt">Exercices Thérapeutiques</div><div class="ps">100+ techniques pratiques classées par catégorie</div></div>
+<input class="si" placeholder="🔍 Rechercher un exercice…" oninput="filterEx(this.value)" id="exsearch">
+<div class="tabs">
+  <button class="tab active" onclick="filterExC('all',this)">Tous</button>
+  <button class="tab" onclick="filterExC('respiration',this)">🌬️ Respiration</button>
+  <button class="tab" onclick="filterExC('relaxation',this)">💆 Relaxation</button>
+  <button class="tab" onclick="filterExC('visualisation',this)">🌅 Visualisation</button>
+  <button class="tab" onclick="filterExC('mindfulness',this)">🧘 Pleine conscience</button>
+  <button class="tab" onclick="filterExC('tcc',this)">🔄 TCC</button>
+  <button class="tab" onclick="filterExC('corps',this)">🏃 Corps</button>
+  <button class="tab" onclick="filterExC('emotion',this)">❤️ Émotions</button>
+  <button class="tab" onclick="filterExC('sommeil',this)">🌙 Sommeil</button>
+  <button class="tab" onclick="filterExC('social',this)">🤝 Social</button>
+</div>
+<div class="g3" id="ex-grid"></div>
+</div>
+
+<!-- TDAH -->
+<div class="sec" id="s-tdah">
+<div class="ph"><div class="pt">TDAH</div><div class="ps">Trouble Déficitaire de l'Attention avec ou sans Hyperactivité</div></div>
+<div class="tabs">
+  <button class="tab active" onclick="showTDAH('fiche',this)">Fiche clinique</button>
+  <button class="tab" onclick="showTDAH('carte',this)">Carte mentale</button>
+  <button class="tab" onclick="showTDAH('outils',this)">Outils pratiques</button>
+  <button class="tab" onclick="showTDAH('exercices',this)">Exercices</button>
+  <button class="tab" onclick="showTDAH('qcm',this)">QCM TDAH</button>
+</div>
+<div id="tdah-c"></div>
+</div>
+
+<!-- TSA -->
+<div class="sec" id="s-tsa">
+<div class="ph"><div class="pt">TSA</div><div class="ps">Trouble du Spectre de l'Autisme</div></div>
+<div class="tabs">
+  <button class="tab active" onclick="showTSA('fiche',this)">Fiche clinique</button>
+  <button class="tab" onclick="showTSA('carte',this)">Carte mentale</button>
+  <button class="tab" onclick="showTSA('outils',this)">Outils pratiques</button>
+  <button class="tab" onclick="showTSA('exercices',this)">Exercices</button>
+  <button class="tab" onclick="showTSA('qcm',this)">QCM TSA</button>
+</div>
+<div id="tsa-c"></div>
+</div>
+
+</main></div>
+
+<!-- EXERCISE MODAL -->
+<div class="mov" id="exModal">
+  <div class="mo">
+    <div class="moh"><div class="mot" id="exMT">Exercice</div><button class="mox" onclick="closeExM()">×</button></div>
+    <div id="exMB"></div>
+  </div>
+</div>
+<script>
+const ST={pts:0,cas:0,qC:0,qT:0,ex:new Set()};
+function upStats(){
+  const p=ST.qT>0?Math.round(ST.qC/ST.qT*100):0;
+  const lv=ST.pts<50?'Débutant':ST.pts<150?'Praticien':ST.pts<300?'Clinicien':'Expert';
+  document.getElementById('gProg').style.width=Math.min(100,ST.pts/300*100)+'%';
+  document.getElementById('gScore').textContent=ST.pts+' pts — '+lv;
+  ['pts','qcm','cas','ex'].forEach(k=>{
+    const el=document.getElementById('d-'+k);
+    if(el) el.textContent=k==='qcm'?p+'%':k==='pts'?ST.pts:k==='cas'?ST.cas:ST.ex.size;
+  });
+}
+function nav(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else document.querySelectorAll('.nb').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
+  const inits={qcm:()=>loadQCM('diag',document.querySelector('#s-qcm .tab')),fiches:()=>{renderFiches();showFC('all',document.querySelector('#s-fiches .tab'));},cartes:()=>showCarte('tag',document.querySelector('#s-cartes .tab')),methodes:()=>showTCC('base',document.querySelector('#s-methodes .tab')),exercices:()=>renderExGrid('all'),cas:()=>renderCas('all'),tdah:()=>showTDAH('fiche',document.querySelector('#s-tdah .tab')),tsa:()=>showTSA('fiche',document.querySelector('#s-tsa .tab'))};
+  if(inits[id]&&!document.getElementById(id==='qcm'?'qcm-c':id==='fiches'?'fiches-grid':id==='cartes'?'carte-c':id==='methodes'?'tcc-c':id==='exercices'?'ex-grid':id==='cas'?'cas-grid':id+'-c')?.children.length) inits[id]();
+  else if(['tdah','tsa'].includes(id)) inits[id]();
+}
+function atab(tabs,el){tabs.forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');}
+
+// ===== CAS =====
+const CASES=[
+{id:1,cat:'anxiete',diff:'easy',em:'👩',name:'Sophie M.',age:34,prof:'Enseignante',motif:'Insomnies, tensions, ruminations',
+hist:'Sophie consulte pour la première fois. Insomnies depuis 8 mois, tensions musculaires permanentes. Inquiétude constante sur le travail, la santé, les relations. "Je n\'arrive pas à éteindre mon cerveau." Épuisée mais incapable de se reposer. Irritable. Difficultés de concentration. Pas d\'antécédents. Bilan médical normal.',
+symp:['Anxiété excessive incontrôlable > 8 mois','Insomnie d\'endormissement et réveils','Tensions musculaires cervicales','Irritabilité, hypervigilance','Difficultés de concentration','Fatigue chronique','Ruminations quotidiennes'],
+qs:[
+{q:'Quel diagnostic principal (DSM-5) ?',o:['Trouble de l\'adaptation anxieux','Trouble anxieux généralisé (TAG)','Trouble panique','EDM avec anxiété'],c:1,exp:'Le TAG (F41.1) : anxiété excessive sur plusieurs domaines, > 6 mois, difficile à contrôler, ≥ 3 symptômes (ici insomnie, tensions, irritabilité, concentration, fatigue). Le trouble de l\'adaptation serait < 6 mois avec facteur identifiable.'},
+{q:'Approche thérapeutique de 1re intention ?',o:['Psychanalyse 3×/semaine','TCC (psychoéducation + relaxation + restructuration)','EMDR intensif','Hypnose seule'],c:1,exp:'La TCC est traitement de niveau 1 (preuve A) pour le TAG. Elle combine : psychoéducation, journal des pensées, restructuration cognitive (intolérance à l\'incertitude), relaxation musculaire, respiration, pleine conscience.'},
+{q:'Distorsion cognitive centrale dans le TAG ?',o:['Personnalisation','Catastrophisation et intolérance à l\'incertitude','Pensée magique','Minimisation'],c:1,exp:'L\'intolérance à l\'incertitude (IU) est le modèle central du TAG (Dugas, 2004). Le patient ne tolère pas ne pas savoir, générant des inquiétudes excessives comme stratégie de contrôle illusoire.'}]},
+{id:2,cat:'depression',diff:'medium',em:'👨',name:'Thomas L.',age:42,prof:'Cadre en reconversion',motif:'Vide intérieur, anhédonie, fatigue profonde',
+hist:'Thomas est adressé par son médecin après une perte d\'emploi il y a 6 mois. Sentiment de vide progressif. Anhédonie : plus de plaisir au sport, à la famille. Ralentissement. Réveil précoce à 4h. Perte appétit -5kg. Sentiment d\'inutilité. "À quoi ça sert ?" sans idéation active. Pas d\'antécédents.',
+symp:['Humeur dépressive > 6 mois','Anhédonie marquée','Réveil précoce (4h)','Perte d\'appétit -5kg','Ralentissement psychomoteur','Dévalorisation, honte','Idéations passives sans plan'],
+qs:[
+{q:'Quel diagnostic ?',o:['Deuil réactionnel','Dysthymie','Épisode dépressif majeur modéré-sévère','Bipolaire II — phase dépressive'],c:2,exp:'L\'EDM (F32) : ≥ 5/9 critères sur 2 semaines dont humeur dépressive OU anhédonie. Ici : humeur, anhédonie, insomnie, perte de poids, ralentissement, dévalorisation, idéations passives = 7 critères. Intensité modérée-sévère du fait du retentissement.'},
+{q:'Priorité face aux idéations passives ?',o:['Changer de sujet','Évaluer directement le risque suicidaire','Orienter aux urgences immédiatement','Attendre qu\'il reparle'],c:1,exp:'Questionner directement le risque suicidaire n\'augmente pas le risque. L\'évaluation couvre : idéation (intensité, fréquence), intention, plan, accès aux moyens, facteurs protecteurs. Ici : passif sans plan → ambulatoire avec filet de sécurité.'},
+{q:'Modalité de traitement ?',o:['TCC seule','Antidépresseurs seuls','TCC (activation comportementale) + avis médical ISRS','Psychanalyse intensive'],c:2,exp:'Pour un EDM modéré-sévère, la combinaison psychothérapie + antidépresseur est supérieure (niveau A). L\'activation comportementale est très efficace : programmer des activités plaisir/maîtrise brise le cycle retrait → dépression.'}]},
+{id:3,cat:'trauma',diff:'hard',em:'👩‍🦱',name:'Leila B.',age:28,prof:'Infirmière urgences',motif:'Flashbacks, évitement, hypervigilance',
+hist:'Consulte 3 mois après un décès brutal dans son service. Flashbacks quotidiens, cauchemars récurrents. Évitement des salles de réa et odeurs d\'antiseptique. Hypervigilance, sursauts. Se sent "derrière une vitre". Culpabilité : "j\'aurais dû faire plus". Retrait social. Difficultés de concentration.',
+symp:['Flashbacks intrusifs quotidiens','Cauchemars récurrents liés au trauma','Évitement situationnel (réa, odeurs)','Hypervigilance, sursaut exagéré','Dépersonnalisation','Culpabilité survictimale','Retrait social, difficultés cognitives'],
+qs:[
+{q:'Diagnostic DSM-5 ?',o:['Trouble de stress aigu','TSPT','Trouble dissociatif','Dépression avec anxiété'],c:1,exp:'Le TSPT (F43.1) : exposition traumatique + 4 clusters (intrusion, évitement, altérations cognitives/émotionnelles, hyperactivation), durée > 1 mois (ici 3 mois). Le trouble de stress aigu dure 3j-1 mois.'},
+{q:'Traitement de 1re ligne pour le TSPT ?',o:['Débriefing CISD immédiat','EMDR ou TCC centrée trauma (PE, CPT)','Relaxation seule','Hospitalisation systématique'],c:1,exp:'L\'EMDR et la TCC centrée trauma (PE — Prolonged Exposure, CPT — Cognitive Processing Therapy) sont les traitements de niveau 1 (OMS, INSERM). Le débriefing CISD seul est contre-indiqué : il peut consolider la mémoire traumatique.'},
+{q:'Comment travailler la culpabilité survictimale ?',o:['"Vous n\'êtes pas responsable" (invalidation directe)','Explorer la croyance par questionnement socratique puis restructuration','Ignorer jusqu\'à stabilisation','Valider la culpabilité comme réelle'],c:1,exp:'La CPT (Cognitive Processing Therapy) utilise le questionnement socratique doux : "Quelles preuves pour et contre ?" — "Qu\'auriez-vous pu faire différemment avec ce que vous saviez à ce moment-là ?" Invalider directement renforce la résistance.'}]},
+{id:4,cat:'perso',diff:'hard',em:'🧑',name:'Alexandre K.',age:25,prof:'Étudiant',motif:'Impulsivité, peur de l\'abandon, automutilation',
+hist:'Adressé après urgences pour automutilation superficielle. Relations intenses et instables. Peur intense d\'abandon même perçu. Image de soi fluctuante. Impulsivité : dépenses, alcool, sexualité à risque. Vide chronique. Dissociation légère sous stress. Humeur changeante dans la journée.',
+symp:['Instabilité relationnelle (idéalisation/dévaluation)','Peur intense de l\'abandon','Identité diffuse','Impulsivité ≥ 2 domaines','Automutilation récurrente','Vide chronique','Instabilité affective infra-journalière','Dissociation transitoire'],
+qs:[
+{q:'Quel trouble de personnalité ?',o:['Personnalité narcissique','Trouble personnalité borderline (TPB)','Bipolaire I','Personnalité histrionique'],c:1,exp:'Le TPB (F60.3) : ≥ 5/9 critères DSM-5. Alexandre présente 8 critères : peur abandon, relations instables, identité diffuse, impulsivité ≥ 2 domaines, automutilation, vide, instabilité affective, dissociation.'},
+{q:'Psychothérapie de référence pour le TPB ?',o:['TCC standard','Thérapie comportementale dialectique (DBT/TCD)','Psychanalyse haute fréquence','EMDR seul'],c:1,exp:'La DBT (Linehan, 1991) est traitement de niveau 1 pour le TPB. Elle combine : groupe compétences (mindfulness, tolérance détresse, régulation émotionnelle, efficacité interpersonnelle), thérapie individuelle, coaching téléphonique.'},
+{q:'Posture face à l\'automutilation ?',o:['Exiger l\'arrêt comme condition','Ignorer','Explorer la fonction sans jugement + construire alternatives','Hospitaliser systématiquement'],c:2,exp:'L\'automutilation non-suicidaire est une stratégie de régulation émotionnelle dysfonctionnelle. En DBT : analyser la chaîne comportementale (antécédents → comportement → conséquences), puis développer alternatives (TIP, TIPP). La punir rompt l\'alliance.'}]},
+{id:5,cat:'tca',diff:'medium',em:'👧',name:'Clara V.',age:19,prof:'Étudiante',motif:'Restriction alimentaire, IMC bas, aménorrhée',
+hist:'Clara amenée par ses parents. IMC = 15,5. Restriction sévère depuis 18 mois. Peur intense de grossir malgré maigreur. Déni partiel : "je suis peut-être un peu maigre". Aménorrhée 8 mois. Rituels (peser les aliments, couper en petits morceaux). Hyperactivité physique. Excellent investissement scolaire.',
+symp:['IMC < 17,5 (15,5)','Restriction alimentaire sévère','Peur intense de grossir','Altération image corporelle','Aménorrhée > 3 cycles','Rituels alimentaires','Hyperactivité physique','Déni partiel de la gravité'],
+qs:[
+{q:'Quel diagnostic ?',o:['Boulimie nervosa','Anorexie mentale restrictive','Trouble dysmorphique corporel','ARFID'],c:1,exp:'L\'anorexie mentale (F50.0) : restriction entraînant poids trop bas, peur intense de grossir, altération de la perception corporelle. Sous-type restrictif (pas de purge). IMC < 17,5 (CIM-10), poids "significativement bas" (DSM-5).'},
+{q:'Priorité en début de prise en charge ?',o:['Psychothérapie intensive immédiate','Évaluation médicale urgente et renutrition si IMC < 15-16','TCC d\'emblée','Anxiolytiques'],c:1,exp:'Pour IMC < 16 ou signes de décompensation (bradycardie, hypokaliémie), la sécurité somatique prime : bilan médical urgent, évaluation hospitalisation. La psychothérapie ne peut être efficace sans restauration pondérale minimale.'},
+{q:'Approche psychothérapeutique indiquée ?',o:['DBT seule','FBT (Maudsley) chez mineur + TCC','Psychanalyse classique','Thérapie de soutien'],c:1,exp:'Chez l\'adolescent, la FBT (Family-Based Treatment / Maudsley) est niveau 1 : les parents reprennent le contrôle alimentaire (phase 1), puis autonomisation progressive. Pour adulte : TCC + MANTRA. La TCC travaille la distorsion d\'image corporelle et les croyances sur la nourriture.'}]},
+{id:6,cat:'anxiete',diff:'medium',em:'🧔',name:'Marc D.',age:38,prof:'Commercial',motif:'Phobie sociale, évitements, isolement',
+hist:'Marc consulte après arrêt maladie. Évite les situations sociales depuis 2 ans. Peur intense d\'être jugé, humilié. Rougissements, transpiration, tremblements en public. Anticipe des semaines à l\'avance. A refusé deux promotions pour éviter de manager. Isolement croissant.',
+symp:['Peur intense d\'être jugé ou humilié','Anxiété anticipatoire intense','Symptômes physiques (rougissements, transpiration)','Évitement systématique','Refus d\'opportunités professionnelles','Isolement social progressif','Durée > 6 mois'],
+qs:[
+{q:'Quel diagnostic ?',o:['TAG','Trouble d\'anxiété sociale (phobie sociale)','Trouble panique avec agoraphobie','Personnalité évitante'],c:1,exp:'Le trouble d\'anxiété sociale (F40.1) : peur marquée des situations sociales où l\'on pourrait être scruté/jugé, évitement ou endurance avec détresse, durée > 6 mois. La personnalité évitante est plus pervasive et liée à l\'identité.'},
+{q:'Technique TCC centrale pour ce trouble ?',o:['Relaxation musculaire seule','Exposition progressive + restructuration cognitive','EMDR','DBT'],c:1,exp:'L\'exposition progressive est le cœur du traitement : hiérarchie SUDs, exposition graduée in vivo, élimination progressive des comportements de sécurité, restructuration des croyances sur le jugement d\'autrui.'},
+{q:'Qu\'est-ce qu\'un "comportement de sécurité" ?',o:['Une technique de relaxation','Un comportement réduisant l\'anxiété à CT mais maintenant la phobie LT','Un facteur protecteur','Une technique d\'exposition'],c:1,exp:'Les comportements de sécurité (éviter le regard, préparer ses phrases) réduisent l\'anxiété à court terme mais renforcent l\'évitement et empêchent le désapprentissage de la peur. La TCC inclut leur élimination progressive lors des expositions.'}]},
+{id:7,cat:'anxiete',diff:'hard',em:'👴',name:'René P.',age:67,prof:'Retraité',motif:'Rituels de vérification, pensées intrusives',
+hist:'René cache depuis 20 ans des rituels de vérification (portes, gaz) prenant 45-90 min/j. Pensées intrusives de blesser ses proches (ego-dystoniques, vécues comme horribles). Lavage des mains > 30×/j. Neutralisations mentales. Évite les couteaux. Honte intense.',
+symp:['Pensées intrusives obsessionnelles (ego-dystoniques)','Rituels de vérification 45-90 min/j','Lavage excessif des mains','Neutralisations mentales','Évitement d\'objets (couteaux)','Honte intense','Durée > 20 ans'],
+qs:[
+{q:'Quel diagnostic ?',o:['TSPT','TOC','Personnalité obsessionnelle','Psychose débutante'],c:1,exp:'Le TOC (F42) : obsessions (pensées intrusives récurrentes, ego-dystoniques) et compulsions (comportements répétitifs de neutralisation), > 1h/j, retentissement fonctionnel. Les pensées de "harm OCD" sont typiques : le patient ne les met jamais à exécution.'},
+{q:'Traitement de référence du TOC ?',o:['TCC sans exposition','Exposition avec Prévention de la Réponse (EPR)','Psychanalyse','Relaxation seule'],c:1,exp:'L\'EPR (gold standard, niveau A) : exposer à la situation anxiogène et interdire le rituel → l\'anxiété monte puis diminue naturellement (habituation). Associé aux ISRS à doses élevées pour formes sévères.'},
+{q:'Comment expliquer les pensées intrusives de violence au patient ?',o:['Ce sont des signes avant-coureurs de passage à l\'acte','Ce sont des pensées normales amplifiées par le TOC qui leur donne une importance excessive','Il faut les chasser activement','Cela indique une psychose sous-jacente'],c:1,exp:'90% de la population a des pensées intrusives. C\'est la fusion pensée-action ("si je le pense, c\'est comme si je le faisais") et les tentatives de neutralisation qui créent le TOC. Normaliser sans minimiser est essentiel.'}]},
+{id:8,cat:'depression',diff:'hard',em:'👩‍🦳',name:'Martine B.',age:55,prof:'Directrice d\'école',motif:'Burnout, effondrement, pleurs incontrôlables',
+hist:'Martine s\'effondre en pleurs dès la 1re minute. Arrêt maladie 3 semaines. Hyperinvestissement chronique, perfectionnisme. Pleurs incontrôlables plusieurs fois/j. Honte intense ("une directrice ne craque pas"). Insomnie. Perte d\'appétit. "Je ne suis plus rien sans mon travail."',
+symp:['Épuisement émotionnel sévère','Pleurs incontrôlables','Perte d\'identité professionnelle','Insomnie d\'endormissement','Perte d\'appétit','Perfectionnisme rigide','Ruminations','Dépersonnalisation au travail'],
+qs:[
+{q:'Quelle distinction diagnostique importante ?',o:['EDM vs burnout vs trouble de l\'adaptation','Bipolaire vs schizophrénie','TOC vs TAG','TSPT vs phobies'],c:0,exp:'Le burnout (Z73.0) peut évoluer vers un EDM si ≥ 5 critères sur 2 semaines. Un trouble de l\'adaptation est aussi à considérer. L\'évaluation doit clarifier les diagnostics pour orienter le traitement.'},
+{q:'Croyance centrale à travailler en TCC ?',o:['Intolérance à l\'incertitude','Fusion valeur personnelle = performance professionnelle','Pensée magique','Catastrophisation météorologique'],c:1,exp:'Le perfectionnisme rigide avec fusion "je suis ce que je fais" est la croyance centrale. En TCC : flèche descendante pour l\'identifier, restructuration (valeur hors travail), développement d\'autres domaines de vie, thérapie des schémas si chronique.'},
+{q:'Intervention face aux pleurs en début de séance ?',o:['Passer à la psychoéducation pour cesser les pleurs','Donner des mouchoirs et laisser s\'exprimer sans interrompre','Proposer respiration immédiatement','Rassurer qu\'elle ira bien'],c:1,exp:'Face aux pleurs : VALIDER, pas stopper. Offrir l\'espace, nommer l\'émotion ("Vous êtes épuisée"). Fenêtre de tolérance (Siegel) : rester dans la zone de régulation. La technique vient APRÈS la connexion.'}]}
+];
+
+let curCas=null,casAns={};
+function renderCas(f){
+  const g=document.getElementById('cas-grid');
+  const l=f==='all'?CASES:CASES.filter(c=>c.cat===f);
+  g.innerHTML=l.map(c=>`<div class="card" style="cursor:pointer" onclick="openCas(${c.id})">
+    <div class="fl2 jb aic" style="margin-bottom:0.65rem">
+      <div><div class="fw">${c.em} ${c.name}</div><div class="tm" style="font-size:0.73rem">${c.age} ans • ${c.prof}</div></div>
+      <span class="${c.diff==='easy'?'de':c.diff==='medium'?'dm':'dh'}">${c.diff==='easy'?'● Facile':c.diff==='medium'?'● Moyen':'● Difficile'}</span>
+    </div>
+    <div class="tm mb1">${c.motif}</div>
+    <div class="fl2 jb aic"><span class="tag ${c.cat==='anxiete'?'ts':c.cat==='depression'?'tg':c.cat==='trauma'?'tt':c.cat==='tca'?'tv':'te'}">${c.cat}</span><span class="tm" style="font-size:0.73rem">${c.qs.length} questions</span></div>
+  </div>`).join('');
+}
+function filterCas(f,el){atab(document.querySelectorAll('#s-cas .tab'),el);renderCas(f);}
+function openCas(id){
+  curCas=CASES.find(c=>c.id===id);casAns={};
+  document.getElementById('cas-lv').classList.add('hid');
+  const dv=document.getElementById('cas-dv');dv.classList.remove('hid');
+  dv.innerHTML=`<button class="btn bs bsm" style="margin-bottom:1rem" onclick="closeCas()">← Retour</button>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--cream);border-radius:10px;margin-bottom:1rem">
+      <div style="font-size:2.2rem;width:54px;height:54px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);flex-shrink:0">${curCas.em}</div>
+      <div><div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600">${curCas.name}</div><div class="tm" style="font-size:0.75rem">${curCas.age} ans • ${curCas.prof}</div><div class="tm" style="font-size:0.75rem">Motif : <strong>${curCas.motif}</strong></div></div>
+    </div>
+    <div style="font-size:0.85rem;line-height:1.75;margin-bottom:1rem">${curCas.hist}</div>
+    <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);font-weight:700;margin-bottom:0.5rem">Symptômes rapportés</div>
+    <ul class="fl">${curCas.symp.map(s=>`<li>${s}</li>`).join('')}</ul>
+  </div>
+  <div class="card"><div class="ct">🎯 Questions cliniques</div>
+    ${curCas.qs.map((q,qi)=>`<div style="margin-bottom:1.25rem" id="cq${qi}">
+      <div style="font-weight:500;font-size:0.92rem;margin-bottom:0.75rem">${qi+1}. ${q.q}</div>
+      ${q.o.map((o,oi)=>`<button class="opt" id="co${qi}_${oi}" onclick="ansCas(${qi},${oi})"><span class="ol">${String.fromCharCode(65+oi)}</span>${o}</button>`).join('')}
+      <div class="fb" id="cfb${qi}"><div class="fw" id="cfbt${qi}"></div><div style="margin-top:0.25rem" id="cfbx${qi}"></div></div>
+    </div><hr>`).join('')}
+    <div id="cas-res"></div>
+  </div>`;
+}
+function ansCas(qi,oi){
+  if(casAns[qi]!==undefined)return;casAns[qi]=oi;
+  const q=curCas.qs[qi];
+  for(let i=0;i<q.o.length;i++){const b=document.getElementById(`co${qi}_${i}`);b.disabled=true;if(i===q.c)b.classList.add('correct');else if(i===oi)b.classList.add('wrong');}
+  const fb=document.getElementById(`cfb${qi}`);fb.className='fb show '+(oi===q.c?'fbok':'fberr');
+  document.getElementById(`cfbt${qi}`).textContent=oi===q.c?'✓ Correct !':'✗ Pas tout à fait...';
+  document.getElementById(`cfbx${qi}`).textContent=q.exp;
+  ST.qT++;if(oi===q.c){ST.qC++;ST.pts+=10;}
+  if(Object.keys(casAns).length===curCas.qs.length){
+    ST.cas++;ST.pts+=20;upStats();
+    const pct=Math.round(Object.values(casAns).filter((a,i)=>a===curCas.qs[i].c).length/curCas.qs.length*100);
+    document.getElementById('cas-res').innerHTML=`<div style="padding:1.1rem;background:var(--cream);border-radius:10px;text-align:center;margin-top:0.75rem"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;color:${pct>=67?'var(--ok)':'var(--err)'}">${pct}%</div><div class="tm">${pct>=67?'Bonne maîtrise !':'Revoyez les concepts — continuez à pratiquer.'}</div></div>`;
+  }else upStats();
+}
+function closeCas(){document.getElementById('cas-lv').classList.remove('hid');document.getElementById('cas-dv').classList.add('hid');}
+
+// ===== QCM DATA =====
+const QDATA={
+diag:[
+{q:'Combien de semaines minimum pour un EDM ?',o:['1 semaine','2 semaines','4 semaines','6 semaines'],c:1,exp:'Le DSM-5 exige ≥ 5 symptômes sur 9 pendant au moins 2 semaines consécutives, avec humeur dépressive ou anhédonie obligatoire.'},
+{q:'Le TAG requiert une anxiété pendant au moins :',o:['1 mois','3 mois','6 mois','1 an'],c:2,exp:'TAG (DSM-5, F41.1) : anxiété excessive et incontrôlable sur plusieurs sujets, la majorité du temps pendant ≥ 6 mois, avec ≥ 3 symptômes associés.'},
+{q:'Quel critère est OBLIGATOIRE pour diagnostiquer le TSPT ?',o:['Exposition directe ou indirecte à un événement traumatique','Flashbacks uniquement','Amnésie complète','Durée > 3 mois'],c:0,exp:'Critère A = exposition à un événement traumatique (mort, blessure grave, violence sexuelle). Elle peut être directe, témoin, apprise pour un proche ou exposition répétée indirecte (secouristes).'},
+{q:'Le trouble panique se distingue du TAG par :',o:['La présence d\'anxiété','Des attaques de panique récurrentes inattendues','La durée > 6 mois','Le retentissement fonctionnel'],c:1,exp:'Trouble panique (F41.0) : attaques récurrentes ET inattendues, suivies d\'au moins 1 mois de peur anticipatoire ou changements comportementaux.'},
+{q:'Quel trouble implique obligatoirement une phase maniaque ?',o:['Cyclothymie','Bipolaire type II','Bipolaire type I','Dysthymie'],c:2,exp:'Bipolaire type I : au moins 1 épisode maniaque (≥ 7j ou hospitalisation). Type II : hypomanie + dépression, jamais de manie franche.'},
+{q:'Le TOC est classé dans le DSM-5 dans :',o:['Troubles anxieux','Troubles obsessionnels-compulsifs et apparentés','Troubles de la personnalité','Troubles dissociatifs'],c:1,exp:'Depuis le DSM-5, le TOC, trouble dysmorphique corporel, thésaurisation, trichotillomanie et excoriation forment un groupe distinct.'},
+{q:'Pour diagnostiquer un TPB, il faut :',o:['3 critères sur 9','5 critères sur 9','7 critères sur 9','Tous les critères'],c:1,exp:'TPB (F60.3) : ≥ 5/9 critères présents de façon stable. Les 9 couvrent : peur abandon, relations instables, identité, impulsivité, automutilation, instabilité affective, vide, colère, dissociation.'},
+{q:'La dysthymie dure au minimum :',o:['6 mois','1 an','2 ans','5 ans'],c:2,exp:'Dysthymie (F34.1) : humeur dépressive la majorité du temps pendant ≥ 2 ans (1 an chez l\'enfant), sans jamais > 2 mois sans symptômes.'},
+{q:'La schizophrénie requiert des symptômes actifs pendant au moins :',o:['2 semaines','1 mois','3 mois','6 mois'],c:1,exp:'Phase active ≥ 1 mois (ou moins si traité), avec ≥ 2 symptômes parmi délires, hallucinations, discours désorganisé, comportement désorganisé, symptômes négatifs. Durée totale ≥ 6 mois.'},
+{q:'L\'agoraphobie requiert la peur d\'au moins combien de situations ?',o:['1','2','3','4'],c:1,exp:'L\'agoraphobie (DSM-5) : peur ou évitement d\'au moins 2 des 5 situations : transports, espaces ouverts, espaces clos, files/foule, hors du domicile seul.'}
+],
+tcc:[
+{q:'La restructuration cognitive vise à :',o:['Supprimer les émotions','Identifier et modifier les pensées automatiques négatives','Exposer à ses peurs','Relaxer les muscles'],c:1,exp:'Restructuration cognitive (Beck) : identifier les PA → évaluer les preuves pour et contre → développer une pensée alternative plus réaliste. L\'objectif est de modifier l\'évaluation cognitive, pas d\'éliminer les émotions.'},
+{q:'L\'activation comportementale est utilisée pour :',o:['Le TOC','La dépression','Le trouble panique','La schizophrénie'],c:1,exp:'L\'activation comportementale (Martell) : programmer des activités à valence positive (plaisir + maîtrise) pour briser le cycle inactivité → rumination → dépression.'},
+{q:'La flèche descendante sert à :',o:['Évaluer l\'humeur','Identifier les croyances profondes (schémas)','Créer une hiérarchie d\'exposition','Mesurer l\'anxiété'],c:1,exp:'Flèche descendante : à partir d\'une PA, demander répétitivement "si c\'était vrai, qu\'est-ce que ça signifierait ?" pour atteindre la croyance centrale (schéma précoce inadapté).'},
+{q:'Le modèle ABC (Ellis) signifie :',o:['Affect-Behavior-Cognition','Activating event-Belief-Consequence','Anxiety-Body-Control','Assessment-Balance-Change'],c:1,exp:'ABC de la REBT : A = événement activateur, B = croyance, C = conséquence émotionnelle/comportementale. L\'objectif est de modifier B pour changer C.'},
+{q:'L\'EPR (exposition et prévention de la réponse) est indiquée pour :',o:['TAG','TOC','Phobie simple','Dépression'],c:1,exp:'EPR (Foa & Kozak) : gold standard pour le TOC. Exposition à l\'obsession sans rituel → habituation. La prévention de la réponse est essentielle.'},
+{q:'La désensibilisation systématique (Wolpe) combine :',o:['Relaxation + exposition imaginaire progressive','Confrontation directe + renforcement','Respiration + visualisation','Pleine conscience + acceptation'],c:0,exp:'Désensibilisation systématique : apprentissage de la relaxation profonde + hiérarchie de stimuli + exposition imaginaire progressive. Repose sur l\'inhibition réciproque.'},
+{q:'Le principe de l\'habituation en exposition : l\'anxiété :',o:['Augmente indéfiniment','Diminue naturellement si exposition maintenue sans fuite','Est contrôlée par les pensées uniquement','Disparaît immédiatement'],c:1,exp:'Habituation : lors d\'une exposition maintenue (≥ 30-45 min) sans comportement d\'évitement, l\'anxiété atteint un pic puis diminue naturellement. Durée minimale = jusqu\'à 50% de réduction des SUDs.'},
+{q:'Les "comportements de sécurité" en TCC des phobies :',o:['Sont des ressources thérapeutiques','Maintiennent la peur malgré l\'exposition','Sont des techniques de relaxation','Sont des protocoles d\'urgence'],c:1,exp:'Les safety behaviors (ex: serrer son sac, éviter le regard) réduisent l\'anxiété à CT mais empêchent l\'habituation et le désapprentissage de la peur.'},
+{q:'La thérapie des schémas (Young) cible principalement :',o:['Les phobies simples','Les troubles de personnalité et souffrances chroniques','Le trouble panique','Les addictions'],c:1,exp:'La thérapie des schémas (Jeffrey Young) cible les schémas précoces inadaptés (SPI) issus de l\'enfance. Combine TCC, attachement et techniques expérientielles. Indiquée pour TPB et problèmes chroniques.'},
+{q:'Le questionnement socratique vise à :',o:['Persuader le patient de changer','Amener le patient à examiner lui-même ses pensées','Évaluer le risque suicidaire','Construire une hiérarchie d\'exposition'],c:1,exp:'Questions neutres et ouvertes qui amènent le patient à explorer ses PA, chercher des preuves, contre-preuves, et construire une perspective alternative. L\'insight doit venir du patient.'}
+],
+trt:[
+{q:'Traitement niveau 1 pour la dépression modérée-sévère ?',o:['Relaxation seule','TCC + antidépresseurs ISRS','Psychanalyse classique','Thérapie de soutien'],c:1,exp:'Pour EDM modéré-sévère, la combinaison psychothérapie (TCC ou activation comportementale) + ISRS est supérieure à chaque traitement seul (méta-analyses, niveau A).'},
+{q:'L\'EMDR est validé en 1re ligne pour :',o:['TAG','TOC','TSPT','Bipolaire'],c:2,exp:'L\'EMDR (Shapiro) : niveau 1 pour le TSPT (OMS, HAS). 8 phases incluant le retraitement des souvenirs traumatiques via stimulations bilatérales alternées.'},
+{q:'La DBT a été développée pour :',o:['La dépression','Le trouble borderline','Le TOC','La schizophrénie'],c:1,exp:'DBT (Linehan, 1991) : spécifiquement développée pour le TPB, pour réduire les comportements suicidaires et parasuicidaires.'},
+{q:'La MBCT est indiquée pour :',o:['Prévenir les rechutes dépressives','Traiter la dépression aiguë','Le trouble panique','Le TOC'],c:0,exp:'MBCT (Segal, Williams, Teasdale) : prévenir les rechutes chez les patients ayant eu ≥ 3 épisodes dépressifs. Réduit le risque de rechute de ~44%.'},
+{q:'Psychotrope de 1re ligne pour le TOC ?',o:['Benzodiazépines','ISRS (clomipramine si résistance)','Lithium','Antipsychotiques'],c:1,exp:'ISRS à doses élevées (fluoxétine, sertraline, fluvoxamine, paroxétine) sont 1re ligne pour le TOC. La clomipramine est réservée aux formes résistantes. Les BZD sont contre-indiquées.'},
+{q:'Pour l\'anorexie chez l\'adolescent, quelle approche niveau 1 ?',o:['TCC individuelle','FBT (Family-Based Treatment / Maudsley)','Psychanalyse','Hospitalisation systématique'],c:1,exp:'La FBT est le traitement de niveau 1 pour l\'anorexie adolescente. 3 phases : reprise du contrôle alimentaire par les parents, retour progressif de l\'autonomie, identité adolescente.'},
+{q:'Les benzodiazépines au long cours dans l\'anxiété :',o:['Sont recommandées','Sont à éviter (dépendance)','Traitent la cause','Sont contre-indiquées dans le TAG'],c:1,exp:'BZD : efficaces à CT sur les symptômes anxieux, mais risque de dépendance après quelques semaines. Recommandées uniquement sur < 4 semaines. Sevrage progressif.'},
+{q:'La MBSR a été développée par :',o:['Aaron Beck','Marsha Linehan','Jon Kabat-Zinn','Albert Ellis'],c:2,exp:'La MBSR (Mindfulness-Based Stress Reduction) a été développée par Jon Kabat-Zinn en 1979 à l\'Université du Massachusetts. Programme de 8 semaines pour la gestion du stress et de la douleur chronique.'}
+],
+spec:[
+{q:'Le TDAH est un trouble :',o:['Psychiatrique acquis','Neurodéveloppemental à base neurobiologique','De la personnalité','Dû à la mauvaise éducation'],c:1,exp:'Le TDAH est un trouble neurodéveloppemental (héritabilité 70-80%) lié à une dysfonction dopaminergique/noradrénergique dans le cortex préfrontal.'},
+{q:'Combien de présentations du TDAH dans le DSM-5 ?',o:['1','2','3','4'],c:2,exp:'3 présentations : inattention prédominante, hyperactivité-impulsivité prédominante, et combinée (la plus fréquente chez les adultes référencés).'},
+{q:'Le TSA se caractérise par :',o:['Déficits sociaux-communicatifs + comportements répétitifs','Inattention et hyperactivité','Obsessions et rituels uniquement','Délires et hallucinations'],c:0,exp:'TSA (F84, DSM-5) : 2 domaines — A) déficits sociaux-communicatifs persistants, B) comportements, intérêts ou activités restreints et répétitifs. Onset en période précoce du développement.'},
+{q:'Outil de dépistage du TSA entre 18-24 mois ?',o:['MMPI-2','M-CHAT-R','WISC-V','BDI-II'],c:1,exp:'Le M-CHAT-R (Modified Checklist for Autism in Toddlers, Revised) : 20 items. Score ≥ 3 → entretien de suivi ; score ≥ 8 → référence diagnostique immédiate.'},
+{q:'Traitement pharmacologique 1re ligne du TDAH chez l\'enfant ?',o:['ISRS','Méthylphénidate (Ritaline, Concerta)','Antipsychotiques','Benzodiazépines'],c:1,exp:'Le méthylphénidate (psychostimulant) est 1re ligne (niveau A). Il inhibe la recapture de dopamine/noradrénaline dans le cortex préfrontal, améliorant les fonctions exécutives.'},
+{q:'Les comportements de stimming dans le TSA servent souvent à :',o:['Manipuler l\'entourage','Réguler des états sensoriels ou émotionnels','Obtenir de l\'attention','Imiter autrui'],c:1,exp:'Le stimming (self-stimulatory behavior) aide la personne TSA à réguler sa surcharge sensorielle, son niveau d\'activation ou son anxiété. À ne pas systématiquement supprimer sans comprendre la fonction.'},
+{q:'Le "masking" dans le TSA désigne :',o:['La dissimulation des traits autistiques pour s\'intégrer','Un trouble de la mémoire','Une technique de relaxation','Un outil d\'évaluation'],c:0,exp:'Le masking : stratégie (souvent inconsciente) de dissimulation des traits autistiques. Particulièrement présent chez les femmes TSA, entraîne épuisement intense et retarde le diagnostic de 10-15 ans.'},
+{q:'Le TDAH chez l\'adulte se présente souvent par :',o:['Hyperactivité motrice évidente','Désorganisation, procrastination, dysrégulation émotionnelle','Symptômes psychotiques','Déficit de mémoire épisodique uniquement'],c:1,exp:'Chez l\'adulte, l\'hyperactivité s\'intériorise. Manifestations dominantes : désorganisation, procrastination chronique, gestion du temps difficile, hypersensibilité émotionnelle (DEA), faible estime de soi secondaire.'}
+],
+ethique:[
+{q:'Le secret professionnel peut être levé :',o:['Jamais','En cas de risque imminent pour la vie','À la demande de la famille','Pour des raisons administratives'],c:1,exp:'Secret professionnel (art. 226-13 Code pénal) : levée possible pour risque imminent (suicidalité grave), signalement maltraitance mineur (art. 226-14), ou soins coordonnés.'},
+{q:'Le consentement éclairé implique :',o:['Signer un formulaire','Comprendre et accepter librement le traitement','Approbation familiale','Validation médecin généraliste'],c:1,exp:'Consentement libre et éclairé : information complète (diagnostic, traitements, alternatives, risques, bénéfices), consentement libre. C\'est un processus continu, pas un acte unique.'},
+{q:'La neutralité bienveillante signifie :',o:['Ne jamais avoir d\'opinion','Accueillir sans jugement tout ce que dit le patient','Être indifférent à la souffrance','Ne pas intervenir'],c:1,exp:'Neutralité bienveillante : posture d\'accueil non-jugeant. Ne signifie pas indifférence — au contraire. Permet au patient de s\'exprimer sans craindre d\'être évalué ou condamné.'},
+{q:'Le contre-transfert est :',o:['Les réactions émotionnelles du patient envers le thérapeute','Les réactions émotionnelles du thérapeute envers le patient','Une technique TCC','Un trouble de la personnalité'],c:1,exp:'Contre-transfert : réactions émotionnelles du thérapeute envers le patient (conscientes et inconscientes). Source d\'information clinique précieuse sur la dynamique relationnelle — à analyser en supervision.'},
+{q:'Face à un patient avec projet suicidaire précis :',o:['Garder la confidentialité absolue','Évaluer l\'urgence et activer les ressources de sécurité','Transférer immédiatement','Minimiser pour ne pas aggraver'],c:1,exp:'Risque suicidaire aigu avec plan précis : évaluer létalité, intentionnalité, accès aux moyens, facteurs protecteurs. Si risque immédiat : contacter SAMU/15, orienter urgences. Sécurité prime sur confidentialité.'}
+]};
+
+const qcmDone={};
+function loadQCM(key,el){
+  atab(document.querySelectorAll('#s-qcm .tab'),el);
+  const c=document.getElementById('qcm-c');
+  c.innerHTML=QDATA[key].map((q,qi)=>`<div class="card" id="qq${key}${qi}">
+    <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.75rem">${qi+1}. ${q.q}</div>
+    ${q.o.map((o,oi)=>`<button class="opt" id="qo${key}${qi}_${oi}" onclick="ansQ('${key}',${qi},${oi})"><span class="ol">${String.fromCharCode(65+oi)}</span>${o}</button>`).join('')}
+    <div class="fb" id="qfb${key}${qi}"><div class="fw" id="qfbt${key}${qi}"></div><div style="margin-top:0.25rem" id="qfbx${key}${qi}"></div></div>
+  </div>`).join('');
+}
+function ansQ(k,qi,oi){
+  const key=k+qi;if(qcmDone[key])return;qcmDone[key]=true;
+  const q=QDATA[k][qi];
+  for(let i=0;i<q.o.length;i++){const b=document.getElementById(`qo${k}${qi}_${i}`);b.disabled=true;if(i===q.c)b.classList.add('correct');else if(i===oi)b.classList.add('wrong');}
+  const fb=document.getElementById(`qfb${k}${qi}`);fb.className='fb show '+(oi===q.c?'fbok':'fberr');
+  document.getElementById(`qfbt${k}${qi}`).textContent=oi===q.c?'✓ Correct !':'✗ Pas tout à fait...';
+  document.getElementById(`qfbx${k}${qi}`).textContent=q.exp;
+  ST.qT++;if(oi===q.c){ST.qC++;ST.pts+=10;}upStats();
+}
+// ===== FICHES =====
+const FICHES=[
+{cat:'troubles',f:'TAG',t:'Trouble Anxieux Généralisé',b:'DSM-5 F41.1 : Anxiété excessive incontrôlable sur plusieurs domaines, > 6 mois.\n≥ 3 symptômes : agitation, fatigue, difficultés de concentration, irritabilité, tensions musculaires, insomnie.\nModèle central : Intolérance à l\'Incertitude (Dugas).\nTraitement 1re ligne : TCC (IU + relaxation) ± ISRS.'},
+{cat:'troubles',f:'EDM',t:'Épisode Dépressif Majeur',b:'≥ 5/9 critères sur 2 semaines dont humeur dépressive OU anhédonie obligatoire.\nAutres critères : perte de poids, insomnie/hypersomnie, agitation/ralentissement, fatigue, dévalorisation, difficultés de concentration, idées suicidaires.\nIntensité : légère / modérée / sévère.\nTraitement : TCC + ISRS (modéré-sévère).'},
+{cat:'troubles',f:'TSPT',t:'Trouble de Stress Post-Traumatique',b:'4 clusters DSM-5 :\n1. Intrusion (flashbacks, cauchemars, détresse aux rappels)\n2. Évitement (situations, pensées liées au trauma)\n3. Altérations cognitives/émotionnelles (culpabilité, détachement)\n4. Hyperactivation (hypervigilance, sursaut, insomnie).\nDurée > 1 mois. Traitement : EMDR ou TCC centrée trauma (PE, CPT).'},
+{cat:'troubles',f:'TOC',t:'Trouble Obsessionnel-Compulsif',b:'Obsessions : pensées intrusives récurrentes, ego-dystoniques (harm OCD, contamination, symétrie).\nCompulsions : comportements répétitifs pour neutraliser l\'anxiété.\n> 1h/j ou retentissement fonctionnel.\nÉchelle : Y-BOCS.\nTraitement : EPR (gold standard) + ISRS hautes doses.'},
+{cat:'troubles',f:'TPB',t:'Trouble Personnalité Borderline',b:'≥ 5/9 critères : peur abandon, relations instables, identité diffuse, impulsivité, automutilation, instabilité affective, vide chronique, colère intense, dissociation.\nModèle biosocial (Linehan) : vulnérabilité émotionnelle + environnement invalidant.\nTraitement : DBT (Linehan) — groupe compétences + thérapie individuelle.'},
+{cat:'troubles',f:'Bipolaire I vs II',t:'Trouble Bipolaire',b:'Type I : ≥ 1 épisode maniaque (≥ 7j ou hospitalisation) ± EDM. Symptômes : grandiosité, ↓ besoin sommeil, logorrhée, fuite des idées, désinhibition.\nType II : ≥ 1 hypomanie (4-6j) + ≥ 1 EDM. Jamais de manie franche.\nCyclothymie : oscillations subsyndromiques ≥ 2 ans.\nTraitement : thymorégulateurs (lithium, valproate) + psychoéducation.'},
+{cat:'troubles',f:'Trouble panique',t:'Trouble Panique',b:'Attaques de panique récurrentes ET inattendues (≥ 4 symptômes parmi : palpitations, transpiration, tremblements, dyspnée, sensation d\'étouffement, douleur thoracique, nausée, vertiges, frissons/bouffées, paresthésies, dépersonnalisation, peur de mourir/devenir fou).\nSuivies d\'1 mois de peur anticipatoire.\nTraitement : TCC (psychoéducation, exposition intéroceptive, restructuration) ± ISRS.'},
+{cat:'troubles',f:'Phobie sociale',t:'Trouble Anxiété Sociale',b:'Peur marquée des situations sociales où l\'on pourrait être scruté/jugé. Anxiété disproportionnée. Évitement ou endurance avec détresse. Durée > 6 mois.\nCroyances typiques : "Je vais rougir et tout le monde le verra", "Ils pensent que je suis stupide".\nTraitement : TCC (exposition + restructuration + élimination des comportements de sécurité) ± ISRS.'},
+{cat:'tcc',f:'Schémas (Young)',t:'Schémas Précoces Inadaptés',b:'18 schémas en 5 domaines :\n1. Séparation/rejet (abandon, méfiance, honte, isolement, defectivité)\n2. Manque d\'autonomie (dépendance, vulnérabilité, enchevêtrement, échec)\n3. Limites altérées (droit, manque de maîtrise)\n4. Orientation vers autrui (soumission, abnégation, recherche d\'approbation)\n5. Survigilance (punition, négativisme/pessimisme)\nOrigine : besoins émotionnels non satisfaits dans l\'enfance.'},
+{cat:'tcc',f:'Distorsions cognitives (Beck)',t:'14 Distorsions Cognitives',b:'• Catastrophisation : imaginer le pire\n• Pensée tout-ou-rien : vision binaire\n• Sur-généralisation : "ça arrive toujours"\n• Personnalisation : responsable de tout\n• Inférence arbitraire : conclusions sans preuves\n• Minimisation/Maximalisation\n• Filtrage mental : ne voir que le négatif\n• Lecture de pensée : croire savoir ce que pense autrui\n• Prédiction : "ça va rater"\n• Devoir/Obligation : "je dois absolument…"\n• Étiquetage : "je suis un raté"\n• Raisonnement émotionnel : "je le ressens donc c\'est vrai"\n• Discounting the positive\n• Sauter aux conclusions'},
+{cat:'tcc',f:'Modèle cognitif (Beck)',t:'Le Modèle Cognitif',b:'Événement activateur → Pensée automatique (rapide, involontaire) → Émotion → Comportement.\n\nNiveaux de pensée :\n1. Pensées automatiques (surface, spécifiques à une situation)\n2. Croyances intermédiaires (règles, attitudes : "je dois…", "si… alors…")\n3. Croyances centrales/schémas (identité : "je suis nul", "les autres sont dangereux")\n\nIntervention TCC : identifier PA → tester les preuves → construire pensée alternative.'},
+{cat:'tcc',f:'Fenêtre de tolérance',t:'Fenêtre de Tolérance (Siegel)',b:'Zone optimale d\'activation du système nerveux pour le traitement émotionnel.\n\n• Hyperactivation (au-dessus) : anxiété, panique, flashbacks, dysrégulation\n• Zone de tolérance (optimal) : capacité à ressentir ET réfléchir\n• Hypoactivation (en dessous) : engourdissement, dissociation, effondrement\n\nObjectif thérapeutique : élargir la fenêtre. Outils : ancrage, respiration, ressources.'},
+{cat:'tcc',f:'Modèle de Linehan (DBT)',t:'Modèle Biosocial (Linehan)',b:'Théorie du TPB :\n• Vulnérabilité émotionnelle biologique (sensibilité, réactivité, retour lent au niveau de base)\n+\n• Environnement invalidant (réponses inadaptées aux expressions émotionnelles)\n\n→ Incapacité apprise à réguler les émotions\n\n4 modules DBT :\n1. Mindfulness (compétence fondamentale)\n2. Régulation émotionnelle\n3. Tolérance à la détresse\n4. Efficacité interpersonnelle (DEAR MAN)'},
+{cat:'pharmaco',f:'ISRS',t:'Inhibiteurs Sélectifs Recapture Sérotonine',b:'Molécules : fluoxétine, sertraline, paroxétine, escitalopram, fluvoxamine, citalopram.\nIndications 1re ligne : EDM, TAG, TOC, TSPT, phobie sociale, trouble panique.\nDélai d\'action : 2-4 semaines.\nEffets secondaires : nausées, céphalées, insomnie, dysfonctions sexuelles, syndrome de sevrage à l\'arrêt brutal.\nDurée recommandée après EDM : ≥ 6 mois après rémission.'},
+{cat:'pharmaco',f:'Lithium',t:'Lithium (Carbonate)',b:'Thymorégulateur de référence pour le trouble bipolaire type I.\nEffets : anti-maniaque, antidépresseur, antisuicidaire (réduction 60-70% du risque).\nMarge thérapeutique étroite : lithiémie 0,6-1,0 mEq/L.\nSurveillance : lithiémie, TSH (hypothyroïdie), créatinine (néphrotoxicité), ECG.\nEffets secondaires : tremblement fin, polyurie/polydipsie, prise de poids.'},
+{cat:'pharmaco',f:'Benzodiazépines',t:'Benzodiazépines (BZD)',b:'Action : potentialisent le GABA-A → anxiolytique, sédatif, myorelaxant, anticonvulsivant.\nIndications courtes (< 4 semaines) : anxiété aiguë, sevrage alcool, insomnie.\nRisques : dépendance physique et psychologique, tolérance, rebond à l\'arrêt, altération cognitive, chutes (personnes âgées).\nContre-indiqués au long cours. Sevrage : réduction progressive (10%/semaine).'},
+{cat:'pharmaco',f:'IRSN',t:'Inhibiteurs Recapture Sérotonine-Noradrénaline',b:'Molécules : venlafaxine, duloxétine, desvenlafaxine.\nIndications : EDM, TAG, douleur chronique, fibromyalgie (duloxétine), neuropathie.\nAvantage vs ISRS : action duale (sérotonine + noradrénaline) = meilleure efficacité sur anxiété et douleur.\nEffets secondaires : élévation légère de la TA (venlafaxine doses élevées), syndrome de sevrage ++.'},
+{cat:'concepts',f:'Alliance thérapeutique',t:'Alliance Thérapeutique (Bordin, 1979)',b:'3 composantes :\n1. Accord sur les buts (objectifs thérapeutiques)\n2. Accord sur les tâches (méthodes de travail)\n3. Lien affectif (relation de confiance)\n\nMesure : WAI (Working Alliance Inventory), HAq.\n\nImportance : 1er prédicteur de l\'outcome thérapeutique toutes approches confondues. Méta-analyses : r = 0.275 avec résultats.'},
+{cat:'concepts',f:'Transfert / Contre-transfert',t:'Transfert et Contre-Transfert',b:'Transfert : le patient reproduit avec le thérapeute des schémas relationnels issus de ses expériences précoces.\n\nContre-transfert : réactions émotionnelles du thérapeute envers le patient (conscientes et inconscientes).\n\nUtilisation clinique : le contre-transfert est une information précieuse sur la dynamique relationnelle — à analyser en supervision, pas à agir depuis.'},
+{cat:'concepts',f:'Pleine conscience',t:'Mindfulness — Définition',b:'Kabat-Zinn (1994) : "Porter son attention, de façon délibérée, au moment présent, sans jugement."\n\n3 composantes : intention (vouloir être attentif), attention (au moment présent), attitude (sans jugement, avec curiosité).\n\nModes mentaux : "mode faire" (résolution de problème, rumination) vs "mode être" (présence, acceptation).\n\nApplications : MBSR, MBCT, ACT, DBT.'},
+{cat:'concepts',f:'Mécanismes de défense',t:'Mécanismes de Défense',b:'Primaires (immatures) : déni, projection, clivage, identification projective.\n\nNévrotiques (intermédiaires) : refoulement, déplacement, rationalisation, intellectualisation, formation réactionnelle.\n\nMatures (adaptés) : sublimation, humour, altruisme, anticipation.\n\nNiveaux de Vaillant : psychotique → immature → névrotique → mature. La thérapie vise à élever le niveau défensif.'}
+];
+let fcCat='all',fcSearch='';
+function renderFiches(){
+  const g=document.getElementById('fiches-grid');
+  let l=FICHES;
+  if(fcCat!=='all')l=l.filter(f=>f.cat===fcCat);
+  if(fcSearch)l=l.filter(f=>f.f.toLowerCase().includes(fcSearch)||f.t.toLowerCase().includes(fcSearch)||f.b.toLowerCase().includes(fcSearch));
+  g.innerHTML=l.map(f=>`<div class="rcard" onclick="this.classList.toggle('fl2')">
+    <div class="rfront">
+      <div class="tag ${f.cat==='troubles'?'tt':f.cat==='tcc'?'ts':f.cat==='pharmaco'?'tg':'tv'}" style="margin-bottom:0.5rem">${f.cat}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;margin-bottom:0.25rem">${f.f}</div>
+      <div class="tm">${f.t}</div>
+      <div class="tm" style="font-size:0.7rem;margin-top:0.6rem">↓ Cliquez pour révéler</div>
+    </div>
+    <div class="rback">${f.b}</div>
+  </div>`).join('');
+}
+function showFC(cat,el){fcCat=cat;atab(document.querySelectorAll('#s-fiches .tab'),el);renderFiches();}
+function filterFiches(v){fcSearch=v.toLowerCase();renderFiches();}
+
+// ===== CARTES MENTALES =====
+const CARTES={
+tag:{n:'Trouble Anxieux Généralisé',c:['Vulnérabilité génétique','Intolérance à l\'incertitude','Enfance imprévisible','Perfectionnisme','Stress chronique'],s:['Anxiété excessive incontrôlable','Tensions musculaires','Insomnie','Fatigue','Irritabilité','Difficultés de concentration','Agitation','Ruminations'],d:['Durée ≥ 6 mois','≥ 3 symptômes (adulte)','Exclusion : substances, maladie','Retentissement fonctionnel','Code F41.1'],t:['TCC (1re ligne)','Relaxation de Jacobson','Psychoéducation IU','ISRS/IRSN','Mindfulness (MBCT)','Activation comportementale']},
+edm:{n:'Épisode Dépressif Majeur',c:['Prédisposition génétique','Stress chronique / deuil','Dysrégulation sérotonine/dopamine','Schémas cognitifs négatifs','Isolement social','Maladies somatiques'],s:['Humeur dépressive','Anhédonie','Insomnie ou hypersomnie','Fatigue intense','Perte/prise de poids','Ralentissement psychomoteur','Dévalorisation, honte','Idéations suicidaires'],d:['≥ 5/9 critères sur 2 semaines','Humeur OU anhédonie obligatoire','Retentissement fonctionnel','Code F32 (léger/modéré/sévère)','Exclure bipolaire, deuil'],t:['TCC (activation comportementale)','ISRS (1re ligne pharma)','Combinaison TCC+ISRS (sévère)','MBCT (prévention rechute)','Thérapie des schémas (chronique)','ECT (résistant)']},
+tspt:{n:'TSPT',c:['Exposition à événement traumatique','Sévérité du trauma','Absence de soutien post-trauma','Antécédents traumatiques','Dissociation péri-traumatique','Dérégulation axe HPA'],s:['Flashbacks, intrusions','Cauchemars récurrents','Évitement situations/pensées','Hypervigilance','Sursauts exagérés','Amnésie partielle','Culpabilité survictimale','Dépersonnalisation'],d:['Critère A : exposition traumatique','4 clusters (intrusion, évitement, cognitif, hyperactivation)','Durée > 1 mois','Code F43.1','SUDs élevés, altération fonctionnelle'],t:['EMDR (niveau 1)','TCC centrée trauma (PE, CPT)','Stabilisation / ressources','ISRS (sertraline, paroxétine)','Somatic experiencing','Traitement du deuil traumatique']},
+tpb:{n:'Trouble Personnalité Borderline',c:['Vulnérabilité émotionnelle biologique','Environnement invalidant (Linehan)','Traumas précoces / maltraitance','Attachement insécure','Dissociation répétée'],s:['Peur abandon intense','Relations instables','Identité diffuse','Impulsivité ≥ 2 domaines','Automutilation / suicidalité','Instabilité affective','Vide chronique','Colère intense','Dissociation'],d:['≥ 5/9 critères DSM-5','Code F60.3','Exclusion : trouble de l\'humeur, TSPT','Stable dans le temps','Début souvent adolescence'],t:['DBT (Linehan) — 1re ligne','STEPPS (groupe)','Thérapie basée sur la mentalisation','Thérapie des schémas','Supervision du thérapeute ++']},
+toc:{n:'Trouble Obsessionnel-Compulsif',c:['Génétique (héritabilité 40-65%)','Dysfonction boucles cortico-striatales','Hypersensibilité sérotonine/glutamate','Traumatismes','Responsabilité inflée'],s:['Obsessions ego-dystoniques','Compulsions (rituels)','> 1h/j','Honte, dissimulation','Détresse intense','Harm OCD, contamination, symétrie','Évitements multiples'],d:['Obsessions ET/OU compulsions','> 1h/j ou retentissement','Code F42','Échelle Y-BOCS','Distinction : TOP, TSPT'],t:['EPR (1re ligne)','ISRS hautes doses','Clomipramine (résistance)','ACT pour TOC','Psychoéducation famille']},
+bipo:{n:'Trouble Bipolaire',c:['Génétique forte (héritabilité ~80%)','Dérégulation dopamine/glutamate','Rythmes circadiens perturbés','Stress psychosocial (kindling)','AD sans thymorégulateur (virage)'],s:['Manie : grandiosité, ↓ sommeil, logorrhée','Dépression bipolaire : EDM classique','Humeur dysphonique mixte','Accélération idéique','Comportements à risque','Cycles rapides (≥ 4 épisodes/an)'],d:['Type I : ≥ 1 manie','Type II : hypomanie + EDM','Cyclothymie : subsyndromique','Code F31.x','Exclure : substances, médical'],t:['Lithium (1re ligne)','Valproate / Lamotrigine','Psychoéducation (IPSRT, groupe)','TCC adaptée bipolaire','Pas d\'AD seul (risque virage)','Régularité sommeil et vie']},
+schizo:{n:'Schizophrénie',c:['Vulnérabilité génétique (~80%)','Dopamine hyperactivité mésolimbique','Cannabis fort (risque × 3-5)','Complications obstétricales','Urbanisation, migration','Trauma précoce'],s:['Hallucinations (surtout auditives)','Idées délirantes','Discours désorganisé','Comportement désorganisé / catatonie','Symptômes négatifs : aboulie, affect plat','Déficits cognitifs (attention, mémoire)'],d:['≥ 2 symptômes actifs ≥ 1 mois','Durée totale ≥ 6 mois','Code F20','Exclusion : bipolaire, substances','GAF, évaluation cognitive'],t:['Antipsychotiques (2e génération)','Réhabilitation psychosociale','TCC pour psychose (CBTp)','Remédiation cognitive','Psychoéducation / PFAMM']},
+phob:{n:'Phobies',c:['Conditionnement classique','Observation / apprentissage vicaire','Prédispositions biologiques','Expériences traumatiques directes','Informations négatives'],s:['Peur intense disproportionnée','Réponse de peur immédiate','Évitement ou endurance avec détresse','Spécifiques : animaux, sang, hauteur, avion','Sociale : jugement, humiliation','Agoraphobie : espaces ouverts / foule'],d:['Peur disproportionnée reconnue','Durée > 6 mois','Retentissement fonctionnel','F40.0 agora, F40.1 sociale, F40.2 spécifique','SUDs > 50 en situation phobogène'],t:['Exposition progressive (1re ligne)','Désensibilisation systématique','TCC (restructuration + exposition)','Exposition en réalité virtuelle (ERV)','ISRS (phobie sociale)','Bêtabloquants (situationnels)']}
+};
+function showCarte(k,el){
+  atab(document.querySelectorAll('#s-cartes .tab'),el);
+  const c=CARTES[k];
+  document.getElementById('carte-c').innerHTML=`<div class="mmap">
+    <div style="text-align:center;margin-bottom:1.25rem"><span class="mmc">${c.n}</span></div>
+    <div class="mmg">
+      <div class="mmb bc"><div class="mmbt">⚡ Causes & Facteurs de risque</div>${c.c.map(x=>`<div class="mmi">${x}</div>`).join('')}</div>
+      <div class="mmb by"><div class="mmbt">🔴 Symptômes</div>${c.s.map(x=>`<div class="mmi">${x}</div>`).join('')}</div>
+      <div class="mmb bd"><div class="mmbt">🔍 Critères diagnostiques</div>${c.d.map(x=>`<div class="mmi">${x}</div>`).join('')}</div>
+      <div class="mmb btr"><div class="mmbt">✅ Traitements</div>${c.t.map(x=>`<div class="mmi">${x}</div>`).join('')}</div>
+    </div>
+  </div>`;
+}
+// ===== TCC METHODES =====
+const TCCM={
+base:`<div class="g2">
+<div class="card"><div class="ct">Le Modèle Cognitif de Beck</div>
+<div class="ib ibs">Événement → Pensée automatique → Émotion → Comportement</div>
+<div class="tl"><div class="tlt">Les 3 niveaux de cognition</div><div class="tlb">1. Pensées automatiques — rapides, involontaires, situationnelles<br>2. Croyances intermédiaires — règles, attitudes<br>3. Croyances centrales / schémas — identité : "je suis incapable"</div></div>
+</div>
+<div class="card"><div class="ct">Distorsions Cognitives (Beck)</div>
+<div class="tl"><div class="tlt">Catastrophisation</div><div class="tlb">Imaginer le pire : "Si je rate, ma vie est fichue."</div></div>
+<div class="tl"><div class="tlt">Pensée tout-ou-rien</div><div class="tlb">Vision binaire : "Si ce n'est pas parfait, c'est un échec total."</div></div>
+<div class="tl"><div class="tlt">Sur-généralisation</div><div class="tlb">Généraliser à partir d'un cas : "Ça rate toujours avec moi."</div></div>
+<div class="tl"><div class="tlt">Personnalisation</div><div class="tlb">Se tenir responsable de tout.</div></div>
+<div class="tl"><div class="tlt">Lecture de pensée</div><div class="tlb">Croire savoir ce que pense l'autre.</div></div>
+</div>
+<div class="card"><div class="ct">Structure d'une Séance TCC</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Check-in + humeur</div><div class="std">Évaluation humeur (0-10), revue devoirs (15 min)</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Agenda collaboratif</div><div class="std">Définir ensemble les sujets de la séance (5 min)</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Travail sur l'objectif</div><div class="std">Exploration, restructuration, apprentissage technique (30 min)</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Résumé + feedback</div><div class="std">Ce que le patient retient, ce qui a été utile (5 min)</div></div></div>
+<div class="step"><div class="stn">5</div><div><div class="stt">Prescription de devoir</div><div class="std">Tâche concrète avant la prochaine séance (5 min)</div></div></div>
+</div>
+<div class="card"><div class="ct">Modèle ABC (Ellis — REBT)</div>
+<div class="ib ibg">A = Activating event / B = Beliefs / C = Consequences (émotions + comportements)</div>
+<p style="font-size:0.83rem;line-height:1.7;margin-top:0.75rem">Ellis ajoute D (Disputing — remettre en question B) et E (Effective new belief). La REBT cible les croyances irrationnelles absolues pour les remplacer par des croyances préférentielles flexibles.</p>
+</div></div>`,
+cog:`<div class="g2">
+<div class="card"><div class="ct">Journal des Pensées (5 colonnes)</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Situation</div><div class="std">Quand ? Où ? Qui ? Quoi ? — Factuel, sans interprétation</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Émotion(s)</div><div class="std">Nommer + intensité (0-100%). Ex: anxiété 80%, honte 60%</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Pensée automatique</div><div class="std">Quelle pensée ? Quelle image ? Conviction (0-100%)</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Réponse adaptée</div><div class="std">Preuves pour/contre. Point de vue alternatif ?</div></div></div>
+<div class="step"><div class="stn">5</div><div><div class="stt">Résultat</div><div class="std">Réévaluer émotion (0-100%) et conviction dans la PA</div></div></div>
+</div>
+<div class="card"><div class="ct">Questionnement Socratique</div>
+<div class="ib ibs">Objectif : amener le patient à examiner lui-même ses pensées, pas le persuader.</div>
+<div class="tl"><div class="tlt">Questions sur les preuves</div><div class="tlb">"Quelles preuves avez-vous que c'est vrai ?" — "Quelles preuves vont à l'encontre ?"</div></div>
+<div class="tl"><div class="tlt">Questions alternatives</div><div class="tlb">"Y a-t-il une autre façon de voir ?" — "Que dirait quelqu'un qui ne vous connaît pas ?"</div></div>
+<div class="tl"><div class="tlt">Flèche descendante</div><div class="tlb">"Et si c'était vrai, qu'est-ce que ça voudrait dire pour vous ?" → répéter jusqu'à croyance centrale</div></div>
+</div>
+<div class="card"><div class="ct">Expériences Comportementales</div>
+<div class="ib ibt">Tester empiriquement si une prédiction anxieuse se réalise</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Identifier la prédiction</div><div class="std">"Si je dis non à mon chef, il me virera." Probabilité estimée : X%</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Concevoir l'expérience</div><div class="std">Dire non poliment pour une petite demande et observer</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Analyser les résultats</div><div class="std">La prédiction s'est-elle réalisée ? Qu'apprend-on sur la croyance ?</div></div></div>
+</div>
+<div class="card"><div class="ct">Analyse Avantages / Inconvénients</div>
+<div class="ib ibg">Évaluer objectivement les bénéfices et coûts d'une croyance ou comportement</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;font-size:0.82rem;margin-top:0.75rem">
+<div style="padding:0.75rem;background:rgba(74,140,106,0.08);border-radius:8px"><strong style="color:var(--ok)">✅ Avantages</strong><br><br>Court terme :<br><br>Long terme :</div>
+<div style="padding:0.75rem;background:rgba(196,74,74,0.06);border-radius:8px"><strong style="color:var(--err)">❌ Inconvénients</strong><br><br>Court terme :<br><br>Long terme :</div>
+</div>
+</div></div>`,
+expo:`<div class="g2">
+<div class="card"><div class="ct">Principe de l'Exposition</div>
+<div class="ib ibs">Confrontation répétée, prolongée, sans fuite ni comportement de sécurité → habituation</div>
+<div class="tl"><div class="tlt">Habituation (Wolpe)</div><div class="tlb">L'anxiété diminue naturellement si l'exposition est maintenue assez longtemps sans fuite</div></div>
+<div class="tl"><div class="tlt">Inhibition d'apprentissage (Craske)</div><div class="tlb">L'exposition crée de nouveaux apprentissages qui inhibent la peur — plus efficace</div></div>
+<div class="ib ibg" style="margin-top:0.75rem">⏱ Durée minimale : 30-45 min ou jusqu'à 50% de réduction des SUDs</div>
+</div>
+<div class="card"><div class="ct">Construction de la Hiérarchie</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Identifier situations évitées</div><div class="std">Lister exhaustivement tous les déclencheurs et situations anxiogènes</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Évaluer les SUDs</div><div class="std">Subjective Units of Distress (0-100) pour chaque situation</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Classer par gradation</div><div class="std">Du moins anxiogène (SUDs 20-30) au plus anxiogène (SUDs 90-100)</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Commencer progressivement</div><div class="std">Débuter par items SUDs 30-40, sans sauter d'étapes</div></div></div>
+<div class="step"><div class="stn">5</div><div><div class="stt">Éliminer comportements sécurité</div><div class="std">Réduire progressivement les béquilles qui empêchent l'habituation</div></div></div>
+</div>
+<div class="card"><div class="ct">EPR — TOC (Exposition + Prévention Réponse)</div>
+<div class="ib ibt">Déclencher l'obsession + interdire le rituel → habituation</div>
+<div class="tl"><div class="tlt">TOC contamination</div><div class="tlb">Toucher une poignée (E) → ne pas se laver les mains 2h (PR) → observer la courbe d'anxiété</div></div>
+<div class="tl"><div class="tlt">TOC vérification</div><div class="tlb">Fermer la porte (E) → partir sans revérifier (PR) → rester avec l'incertitude</div></div>
+<div class="ib ibg" style="margin-top:0.75rem">Important : expliquer la courbe de l'anxiété. La détresse monte avant de baisser — c'est normal.</div>
+</div>
+<div class="card"><div class="ct">Prolonged Exposure (PE) — TSPT</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Psychoéducation</div><div class="std">Rationale de l'exposition, TSPT comme évitement conditionné, respiration contrôlée</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Exposition in vivo</div><div class="std">Situations sécuritaires évitées à cause du trauma (hiérarchie SUDs)</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Exposition imaginaire</div><div class="std">Raconter le trauma au présent, enregistré, réécouté en devoir</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Processing</div><div class="std">Discussion sur les pensées/émotions activées pendant l'exposition</div></div></div>
+</div></div>`,
+comp:`<div class="g2">
+<div class="card"><div class="ct">Activation Comportementale (Dépression)</div>
+<div class="ib ibs">Inactivité → renforce dépression. Programmer des activités à valence positive brise le cycle.</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Monitoring activité-humeur</div><div class="std">Journal : activités + humeur horaire (0-10) sur une semaine</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Identifier activités P+M</div><div class="std">Plaisir et Maîtrise : activités qui donnaient du plaisir et celles de compétence</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Programmation</div><div class="std">Planifier des activités P+M progressivement (commencer par 10-15 min)</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Réduire comportements retrait</div><div class="std">Identifier et réduire les comportements qui maintiennent la dépression</div></div></div>
+</div>
+<div class="card"><div class="ct">Résolution de Problème</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Orientation positive</div><div class="std">Voir le problème comme un défi soluble, pas une catastrophe</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Définir le problème</div><div class="std">Décrire précisément (factuel, observable, mesurable)</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Brainstorming</div><div class="std">Toutes les solutions possibles sans jugement</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Évaluer et choisir</div><div class="std">Avantages/inconvénients de chaque solution</div></div></div>
+<div class="step"><div class="stn">5</div><div><div class="stt">Mettre en œuvre</div><div class="std">Action + évaluation des résultats → ajustements</div></div></div>
+</div>
+<div class="card"><div class="ct">Assertivité — DESC</div>
+<div class="ib ibt">Différencier : passivité / agressivité / assertivité</div>
+<div class="step"><div class="stn">D</div><div><div class="stt">Décrire</div><div class="std">La situation factuellement : "Quand tu arrives en retard…"</div></div></div>
+<div class="step"><div class="stn">E</div><div><div class="stt">Exprimer</div><div class="std">Son ressenti : "Je me sens déçu(e) et peu important(e)"</div></div></div>
+<div class="step"><div class="stn">S</div><div><div class="stt">Spécifier</div><div class="std">La demande : "J'aimerais que tu me prévienne si tu seras en retard"</div></div></div>
+<div class="step"><div class="stn">C</div><div><div class="stt">Conséquences</div><div class="std">Positives : "Ainsi je pourrais mieux m'organiser"</div></div></div>
+</div>
+<div class="card"><div class="ct">Gestion de la Colère (Novaco)</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Psychoéducation</div><div class="std">Identifier les déclencheurs, signaux physiologiques précoces</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Relaxation d'urgence</div><div class="std">Respiration profonde dès les premiers signaux</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Restructuration cognitive</div><div class="std">Modifier les pensées hostiles ("il fait exprès" → "il n'est peut-être pas conscient")</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Réponses assertives</div><div class="std">Développer des alternatives comportementales à l'agression</div></div></div>
+</div></div>`,
+vague3:`<div class="g2">
+<div class="card"><div class="ct">ACT — Thérapie d'Acceptation et d'Engagement</div>
+<div class="ib ibs">Objectif : flexibilité psychologique — accepter ce qu'on ne peut changer, agir selon ses valeurs</div>
+<div class="tl"><div class="tlt">6 processus ACT (Hexaflex)</div><div class="tlb">1. Acceptation (vs évitement expérientiel)<br>2. Défusion cognitive (vs fusion)<br>3. Soi comme contexte<br>4. Contact avec le moment présent<br>5. Valeurs<br>6. Action engagée</div></div>
+<div class="tl"><div class="tlt">Métaphores clés</div><div class="tlb">Bus du destin : les pensées sont des passagers, vous êtes le chauffeur<br>Feuilles sur la rivière : laisser passer les pensées sans s'y accrocher</div></div>
+</div>
+<div class="card"><div class="ct">DBT — Compétences Clés (Linehan)</div>
+<div class="tl"><div class="tlt">Pleine conscience</div><div class="tlb">QUO : observer, décrire, participer. COM : non-jugement, une chose à la fois, efficacement</div></div>
+<div class="tl"><div class="tlt">Tolérance à la détresse — TIPP</div><div class="tlb">Temperature (eau froide), Intense exercise, Paced breathing, Progressive relaxation</div></div>
+<div class="tl"><div class="tlt">Régulation émotionnelle</div><div class="tlb">Identifier/nommer les émotions. PLEASE (soins physiques). Action opposée à l'émotion</div></div>
+<div class="tl"><div class="tlt">Efficacité interpersonnelle — DEAR MAN</div><div class="tlb">Décrire, Exprimer, Assert, Renforcer, Mindful, Appear confident, Negotiate</div></div>
+</div>
+<div class="card"><div class="ct">MBCT / MBSR — Pleine Conscience</div>
+<div class="ib ibv">MBSR (Kabat-Zinn) : stress. MBCT (Segal, Williams, Teasdale) : prévention rechute dépressive</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Body Scan (30-45 min)</div><div class="std">Balayage corporel de bas en haut, attention non-jugeante à chaque sensation</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Méditation assise</div><div class="std">Attention à la respiration, puis sons, pensées comme événements mentaux</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Espace de respiration 3 min</div><div class="std">1 min : que se passe-t-il ? | 1 min : recentrage | 1 min : élargissement</div></div></div>
+</div>
+<div class="card"><div class="ct">Thérapie des Schémas (Young)</div>
+<div class="ib ibg">Pour les troubles de personnalité et souffrances chroniques résistantes à la TCC standard</div>
+<div class="tl"><div class="tlt">Modes schématiques</div><div class="tlb">Enfant vulnérable, Enfant coléreux, Parent punitif, Parent exigeant, Adulte sain</div></div>
+<div class="tl"><div class="tlt">Techniques expérientielles</div><div class="tlb">Imagery rescripting, chaise vide, lettre au parent défaillant</div></div>
+<div class="tl"><div class="tlt">Reparentage limité</div><div class="tlb">Le thérapeute répond aux besoins émotionnels non satisfaits dans l'enfance</div></div>
+</div></div>`,
+proto:`<div class="g2">
+<div class="card"><div class="ct">Protocole TAG — 16 séances (Dugas)</div>
+<div class="step"><div class="stn">1-2</div><div><div class="stt">Psychoéducation + auto-monitoring</div><div class="std">Comprendre le TAG, identifier les inquiétudes et leurs fonctions</div></div></div>
+<div class="step"><div class="stn">3-5</div><div><div class="stt">Intolérance à l'incertitude</div><div class="std">Identifier l'IU, exposition à l'incertitude, expériences comportementales</div></div></div>
+<div class="step"><div class="stn">6-9</div><div><div class="stt">Réévaluation de l'inquiétude</div><div class="std">Modifier les croyances sur l'utilité de s'inquiéter</div></div></div>
+<div class="step"><div class="stn">10-12</div><div><div class="stt">Résolution de problème</div><div class="std">Inquiétudes de type 2 (problèmes réels) → résolution structurée</div></div></div>
+<div class="step"><div class="stn">13-16</div><div><div class="stt">Réévaluation + prévention rechute</div><div class="std">Croyances métacognitives, plan de maintien, signaux d'alerte</div></div></div>
+</div>
+<div class="card"><div class="ct">Protocole TSPT — CPT (12 séances)</div>
+<div class="step"><div class="stn">1-2</div><div><div class="stt">Psychoéducation + impact statement</div><div class="std">Comprendre le TSPT, écrire pourquoi l'événement s'est produit selon soi</div></div></div>
+<div class="step"><div class="stn">3-4</div><div><div class="stt">Points bloquants (stuck points)</div><div class="std">Identifier les croyances qui empêchent le traitement du trauma</div></div></div>
+<div class="step"><div class="stn">5-8</div><div><div class="stt">Questionnement des croyances</div><div class="std">Examiner les preuves, pensées alternatives</div></div></div>
+<div class="step"><div class="stn">9-11</div><div><div class="stt">5 thèmes traumatiques</div><div class="std">Sécurité, confiance, pouvoir, estime de soi, intimité</div></div></div>
+<div class="step"><div class="stn">12</div><div><div class="stt">Nouvel impact statement</div><div class="std">Comparer les deux impact statements, consolider les acquis</div></div></div>
+</div>
+<div class="card"><div class="ct">Protocole TOC — EPR (16-20 séances)</div>
+<div class="step"><div class="stn">1-3</div><div><div class="stt">Évaluation + psychoéducation</div><div class="std">Y-BOCS, rationale EPR, modèle cognitif du TOC</div></div></div>
+<div class="step"><div class="stn">4-5</div><div><div class="stt">Construction hiérarchie</div><div class="std">Lister toutes les situations TOC, évaluer les SUDs, classer</div></div></div>
+<div class="step"><div class="stn">6-15</div><div><div class="stt">Séances d'exposition</div><div class="std">Exposition graduelle avec PR en séance + devoirs entre séances</div></div></div>
+<div class="step"><div class="stn">16-20</div><div><div class="stt">Généralisation + prévention</div><div class="std">Élargir aux situations difficiles, plan anti-rechute</div></div></div>
+</div>
+<div class="card"><div class="ct">Grille d'Évaluation Clinique Initiale</div>
+<div class="ib ibb" style="font-size:0.8rem;line-height:1.8"><strong>Motif :</strong> spontané ou adressé ?<br><strong>Symptômes :</strong> début, évolution, déclencheurs, retentissement<br><strong>Risque :</strong> idéations suicidaires (passives/actives), plan, moyens, facteurs protecteurs<br><strong>ATCD :</strong> psychiatriques, traitements, médicaux, développement<br><strong>Contexte :</strong> social, familial, professionnel, consommations<br><strong>Ressources :</strong> soutien, valeurs, compétences, motivation<br><strong>Objectifs :</strong> du patient (vs thérapeute) — accord sur les buts et les tâches</div>
+</div></div>`
+};
+function showTCC(k,el){atab(document.querySelectorAll('#s-methodes .tab'),el);document.getElementById('tcc-c').innerHTML=TCCM[k];}
+// ===== EXERCICES =====
+const EX=[
+{id:'r1',cat:'respiration',i:'🫁',t:'Cohérence cardiaque 5-5',d:'5 min',desc:'Respiration régulée à 5 inspirations/min pour équilibrer le système nerveux autonome.',s:['Assis, dos droit, mains sur les genoux','Inspirez lentement par le nez en comptant jusqu\'à 5 (ventre d\'abord)','Expirez doucement par la bouche en comptant jusqu\'à 5','Maintenir ce rythme 5 minutes','Pratiquer 3 fois par jour pour un effet physiologique maximum','Évaluer l\'humeur avant et après (0-10)']},
+{id:'r2',cat:'respiration',i:'🌬️',t:'Respiration 4-7-8',d:'3 min',desc:'Technique du Dr Andrew Weil activant le système nerveux parasympathique.',s:['Expirer complètement par la bouche','Inspirer par le nez en comptant 4','Retenir le souffle en comptant 7','Expirer bruyamment par la bouche en comptant 8','Répéter 4 cycles maximum au début','Utile avant le sommeil ou en situation de stress aigu']},
+{id:'r3',cat:'respiration',i:'🔲',t:'Respiration en boîte (Box)',d:'4 min',desc:'Technique des forces spéciales pour le contrôle du stress aigu.',s:['Expirer complètement','Inspirer en comptant 4','Retenir poumons pleins en comptant 4','Expirer en comptant 4','Retenir poumons vides en comptant 4','Répéter 4 à 8 cycles']},
+{id:'r4',cat:'respiration',i:'📉',t:'Respiration diaphragmatique',d:'5 min',desc:'Activation du diaphragme pour une respiration profonde et complète.',s:['Allongé, une main sur la poitrine, une sur le ventre','Inspirez lentement : le ventre se soulève, pas la poitrine','Expirez : le ventre redescend','Ratio inspiration/expiration = 1:2 (ex: 3s / 6s)','Pratiquer 10 min matin et soir','Journal : noter les variations de tension']},
+{id:'r5',cat:'respiration',i:'🎵',t:'Respiration alternée (Nadi Shodhana)',d:'5 min',desc:'Technique yogique équilibrant les deux hémisphères.',s:['Assis, pouce droit ferme narine droite','Inspirez par la narine gauche (4s)','Fermer les deux narines → retenir (4s)','Ouvrir narine droite → expirer (4s)','Inspirer par la droite → fermer → expirer par la gauche','Pratiquer 5 à 10 cycles complets']},
+{id:'r6',cat:'respiration',i:'🐝',t:'Humming Bee (Bhramari)',d:'3 min',desc:'Vibration du souffle activant le nerf vague et réduisant l\'anxiété.',s:['Assis, yeux fermés, bouche légèrement fermée','Inspirez profondément par le nez','En expirant, produire un bourdonnement doux (comme une abeille)','Sentir les vibrations dans la tête et la gorge','Répéter 6 à 10 fois','Observer la diminution de l\'agitation mentale']},
+{id:'r7',cat:'respiration',i:'🌊',t:'Respiration de vague (Ujjayi)',d:'5 min',desc:'Respiration océanique pour la concentration et la réduction du stress.',s:['Inspirez normalement par le nez','En expirant, contracter légèrement la gorge (son de vague)','La gorge crée une légère résistance audible','Rythme : 4s inspir, 6s expir','Écouter le son de sa propre respiration','Utile pendant l\'exposition ou la méditation']},
+{id:'r8',cat:'respiration',i:'🌡️',t:'Respiration froide (réflexe de plongée)',d:'2 min',desc:'Activer le réflexe vagal pour calmer une crise aiguë immédiatement.',s:['Remplir un saladier d\'eau froide (15°C environ)','Prendre une grande inspiration et retenir','Plonger le visage dans l\'eau 20-30 secondes','OU : tenir un sac de glaçons sur le visage','Le réflexe de plongée ralentit immédiatement la fréquence cardiaque','Alternative : boire un grand verre d\'eau froide lentement']},
+{id:'r9',cat:'respiration',i:'🎈',t:'Respiration expansive (360°)',d:'5 min',desc:'Imaginer le corps comme un ballon qui se gonfle dans toutes les directions.',s:['Assis les yeux fermés, mains à plat sur les cuisses','Imaginer le souffle qui remplit d\'abord le ventre...','...puis les côtés de la cage thoracique...','...puis le dos, les épaules et les clavicules','Expirer en sens inverse (clavicules → ventre)','Visualiser le corps comme un ballon qui se gonfle et se dégonfle']},
+{id:'r10',cat:'respiration',i:'🔢',t:'Respiration 5-2-10',d:'5 min',desc:'Ratio prolongé en expiration pour une relaxation parasympathique maximale.',s:['Inspirez par le nez en comptant jusqu\'à 5','Retenez 2 secondes','Expirez très lentement par la bouche en comptant jusqu\'à 10','Le double en expiration active le système parasympathique','Répéter 8 à 10 fois','Idéal avant le coucher ou en pré-séance']},
+{id:'r11',cat:'respiration',i:'🌸',t:'Respiration de la fleur',d:'3 min',desc:'Technique visuelle pour enfants et adultes pour ancrer la respiration.',s:['Imaginer une belle fleur devant vous','Inspirez lentement comme si vous sentiez le parfum de la fleur (5s)','Retenez le parfum un instant (2s)','Expirez doucement comme pour faire balancer les pétales (5s)','Visualiser la fleur en détail : couleur, forme, parfum','Pratiquer 5 à 8 cycles']},
+{id:'r12',cat:'respiration',i:'📦',t:'Respiration de libération',d:'4 min',desc:'Libérer les tensions émotionnelles accumulées via la respiration.',s:['Inspirez profondément en imaginant absorber de l\'énergie lumineuse','Retenez et scannez le corps : où sentez-vous de la tension ?','Expirez longuement en soufflant par la bouche (son "haaaa")','Imaginer la tension quitter le corps avec l\'air expiré','Répéter en ciblant les zones de tension spécifiques','Terminer par une respiration normale consciente']},
+{id:'rl1',cat:'relaxation',i:'💆',t:'Jacobson — Relaxation Progressive',d:'20 min',desc:'Contracter puis relâcher chaque groupe musculaire — gold standard de la relaxation.',s:['Allongé, bras le long du corps, yeux fermés','Pieds : contracter fort 7s, relâcher 20s (sentir la différence)','Remonter : mollets → cuisses → fessiers → ventre → poings → bras → épaules → nuque → visage','Pour chaque groupe : contraction (7s) puis relâchement (20s)','Observer la chaleur et le relâchement musculaire','Terminer par une respiration profonde et ancrage dans le présent']},
+{id:'rl2',cat:'relaxation',i:'🌿',t:'Ancrage 5-4-3-2-1 (grounding)',d:'3 min',desc:'Revenir au moment présent lors de dissociation, panique ou flashback.',s:['5 choses que vous VOYEZ : nommer à voix basse','4 choses que vous ENTENDEZ','3 choses que vous pouvez TOUCHER (et les toucher)','2 choses que vous SENTEZ (odeur)','1 chose que vous GOÛTEZ','Respirer profondément entre chaque sens']},
+{id:'rl3',cat:'relaxation',i:'☀️',t:'Relaxation autogène (Schultz)',d:'15 min',desc:'Auto-suggestions de lourdeur, chaleur et calme pour induire une relaxation profonde.',s:['"Mon bras droit est lourd, très lourd..." (30s) — puis les autres membres','"Mon bras droit est chaud, très chaud..." (30s) — puis les autres membres','"Mon cœur bat calmement et régulièrement..."','"Ma respiration est calme et régulière..."','"Mon ventre est chaud et détendu... Mon front est frais..."','Retour : "Je me sens alerte et reposé(e)", ouvrir les yeux lentement']},
+{id:'rl4',cat:'relaxation',i:'🛋️',t:'Lieu de sécurité (imagerie guidée)',d:'15 min',desc:'Visualiser un lieu de sécurité pour déclencher une réponse de relaxation.',s:['Allongé, yeux fermés, quelques respirations profondes','Imaginer un lieu où vous vous sentez en sécurité et bien (plage, forêt, maison...)','Enrichir l\'image : couleurs, sons, odeurs, textures, température','Vous voir dans ce lieu, détendu(e) et serein(e)','Rester 10 minutes dans cette image','Retour progressif : wiggler les doigts, les orteils, ouvrir les yeux']},
+{id:'rl5',cat:'relaxation',i:'🎵',t:'Relaxation par sons',d:'10 min',desc:'Utiliser la musique ou sons de la nature comme ancre de relaxation conditionnée.',s:['Choisir une musique instrumentale calme (60-80 BPM) ou sons nature','S\'allonger ou s\'asseoir confortablement','Fermer les yeux et laisser la musique remplir l\'espace','Se concentrer uniquement sur les sons, sans jugement','Si une pensée vient, la noter et revenir aux sons','Associer cette musique à la relaxation (ancre conditionnée)']},
+{id:'rl6',cat:'relaxation',i:'🌀',t:'Micro-relaxation express (2 min)',d:'2 min',desc:'Libération rapide des tensions physiques en toute situation.',s:['Serrer les poings fort (5s) → relâcher soudainement et secouer les mains','Monter les épaules vers les oreilles (5s) → relâcher brutalement','Tourner la tête lentement de droite à gauche (5 fois)','Baisser le menton vers la poitrine, tenir 10s','Bouche grande ouverte (5s) → relâcher (libération mâchoire)','Terminer par 3 respirations profondes']},
+{id:'rl7',cat:'relaxation',i:'🌸',t:'Relaxation TPB (ancrage sensoriel)',d:'10 min',desc:'Relaxation structurée avec ancrage sensoriel pour patients avec dysrégulation émotionnelle.',s:['Contact avec le sol : sentir le poids du corps sur la chaise/le sol','Mains sur les cuisses : sentir la chaleur et la pression','Respiration : 4s inspir, 6s expir, 5 cycles','Relaxation rapide des épaules, des mâchoires, du front','Imaginer un lieu-ressource sécurisant (2 min)','Retour : contact avec la pièce, son, lumière, température']},
+{id:'rl8',cat:'relaxation',i:'🌙',t:'Balayage corporel léger (5 min)',d:'5 min',desc:'Version courte du body scan pour une relaxation rapide en journée.',s:['Assis ou allongé, fermer les yeux','Attention aux pieds : quelle sensation ? Chaleur, contact avec le sol ?','Remonter les jambes, les hanches, l\'abdomen','Observer le ventre qui se gonfle et se dégonfle','Les épaules, le cou, le visage','Fin : ouvrir les yeux doucement, revenir à la pièce']},
+{id:'v1',cat:'visualisation',i:'🌅',t:'Lieu de sécurité (EMDR ressource)',d:'10 min',desc:'Créer une ressource interne de sécurité utilisable dans les moments difficiles.',s:['Yeux fermés, respiration régulière','Laisser émerger une image d\'un lieu où vous vous sentez complètement en sécurité','Enrichir : couleurs, lumière, sons, odeurs, sensations physiques','Choisir un mot ou geste "ancre" pour accéder à ce lieu rapidement','Stimulations bilatérales douces (optionnel) pour installer la ressource','Pratiquer régulièrement pour renforcer l\'ancre']},
+{id:'v2',cat:'visualisation',i:'🏆',t:'Visualisation de réussite',d:'10 min',desc:'Renforcer la motivation et réduire l\'anxiété de performance par répétition mentale.',s:['Déterminer l\'objectif précis (examen, entretien, prise de parole)','Yeux fermés, respiration calme','Vous voir en train de réussir — vue à la 1re personne (vous ÊTES dans la situation)','Inclure les détails sensoriels : sons, sensations, regards','Ressentir la fierté et la confiance dans le corps','Ouvrir les yeux et noter 3 forces mobilisées']},
+{id:'v3',cat:'visualisation',i:'☁️',t:'Défusion par les nuages',d:'8 min',desc:'Technique ACT pour prendre de la distance avec les pensées envahissantes.',s:['Allongé sur l\'herbe imaginaire, regardant le ciel','Les pensées sont des nuages qui passent','Observer chaque pensée : ne pas la suivre, juste la regarder','"Je remarque que j\'ai la pensée que..."','Laisser chaque nuage-pensée passer dans son propre rythme','Vous êtes le ciel (contexte), pas les nuages (pensées)']},
+{id:'v4',cat:'visualisation',i:'🏔️',t:'Visualisation de la montagne',d:'15 min',desc:'Développer la stabilité et la résilience face aux changements intérieurs (Kabat-Zinn).',s:['Assis, yeux fermés, posture droite et stable','Visualiser la montagne la plus belle que vous connaissez','Sentez-vous devenir cette montagne — solide, enracinée','Les saisons changent : printemps, été, automne, hiver — la montagne reste','Les pensées/émotions sont les saisons — elles passent','Vous êtes la montagne : stable malgré les tempêtes intérieures']},
+{id:'v5',cat:'visualisation',i:'🌊',t:'Vague émotionnelle (surfing)',d:'8 min',desc:'Apprendre à "surfer" sur les émotions intenses sans les combattre.',s:['Rester assis, les deux pieds au sol','Identifier l\'émotion difficile et lui donner une note d\'intensité (0-10)','L\'imaginer comme une vague dans l\'océan — elle monte...','Observer sans résister : "cette vague passera"','Respirer et rester présent pendant la montée','Observer la descente naturelle — noter l\'intensité à nouveau']},
+{id:'v6',cat:'visualisation',i:'🌳',t:'Arbre intérieur (stabilisation)',d:'10 min',desc:'Ancrage et connexion à la force intérieure via la métaphore de l\'arbre.',s:['Debout ou assis, pieds bien à plat au sol','Imaginer des racines qui partent de vos pieds et s\'enfoncent dans la terre','Les racines vous ancrent solidement','Le tronc est votre colonne vertébrale — solide et flexible','Les branches sont vos bras et pensées — elles bougent au vent','Les feuilles représentent les émotions — elles passent avec les saisons']},
+{id:'v7',cat:'visualisation',i:'💎',t:'Coffre-fort des ressources',d:'12 min',desc:'Rassembler et renforcer les ressources intérieures positives.',s:['Yeux fermés, visualiser un coffre-fort ou un beau coffret','Ouvrir et y placer des souvenirs de succès, de force, de soutien','Chaque souvenir devient un objet symbolique (photo, médaille, lettre)','Sentir la chaleur et la fierté associées à chaque ressource','Fermer le coffre — il est toujours accessible','En cas de difficultés : ouvrir mentalement le coffre, choisir une ressource']},
+{id:'v8',cat:'visualisation',i:'🔦',t:'Lumière de bienveillance (auto-compassion)',d:'10 min',desc:'Développer l\'auto-compassion à travers la visualisation.',s:['Yeux fermés, imaginer un faisceau de lumière chaleureuse au-dessus de vous','La lumière entre par le sommet de la tête et descend','Elle remplit les zones tendues, les zones de douleur émotionnelle','Cette lumière c\'est la bienveillance que vous auriez pour un ami cher','Laisser cette bienveillance remplir le cœur','S\'adresser à soi : "Je suis là pour toi, tu mérites du bien"']},
+{id:'v9',cat:'visualisation',i:'🦋',t:'Transformation (métaphore chrysalide)',d:'12 min',desc:'Métaphore de changement pour les transitions thérapeutiques difficiles.',s:['Yeux fermés, imaginez-vous comme une chenille dans un cocon','C\'est inconfortable mais sûr — la transformation est en cours','Sentir le changement lent (pas douloureux, juste différent)','L\'inconfort du cocon précède la liberté des ailes','Imaginer l\'émergence progressive — première lumière, premières ailes','Voler librement — où allez-vous en premier ?']},
+{id:'m1',cat:'mindfulness',i:'🧘',t:'Body Scan complet',d:'30 min',desc:'Exploration attentive de chaque partie du corps de bas en haut.',s:['Allongé, yeux fermés, bras légèrement écartés','Commencer par les orteils du pied gauche : quelle sensation ?','Remonter lentement : plante, cheville, mollet, genou, cuisse...','Puis pied droit, et remonter de même','Bassin, abdomen, dos, poitrine, épaules, bras, mains, nuque, visage','Si l\'attention s\'égare, revenir doucement, sans jugement']},
+{id:'m2',cat:'mindfulness',i:'🍎',t:'Pleine conscience en mangeant',d:'15 min',desc:'Développer une relation consciente à l\'alimentation.',s:['Choisir un aliment simple (raisin, carré de chocolat)','L\'observer comme si c\'était la première fois : couleur, forme, texture','Le sentir : noter toutes les odeurs','Le porter aux lèvres sans encore le mettre en bouche','En bouche : texture, goût, changements au fil des secondes','Mâcher lentement, consciemment, noter le désir d\'avaler']},
+{id:'m3',cat:'mindfulness',i:'🚶',t:'Marche en pleine conscience',d:'15 min',desc:'Ancrage dans le corps en mouvement — utile pour les patients agités.',s:['Marcher lentement dans une pièce ou dehors','Attention à la plante des pieds : talon, milieu, orteils','Sentir le sol sous les pieds à chaque pas','Observer les mouvements des jambes et du corps entier','Si une pensée vient, noter "pensée" et revenir aux sensations des pieds','Augmenter légèrement la vitesse tout en maintenant l\'attention']},
+{id:'m4',cat:'mindfulness',i:'💧',t:'Observation du souffle',d:'10 min',desc:'Méditation de base — porte d\'entrée de la pleine conscience.',s:['Assis confortablement, dos droit mais non rigide','Fermer les yeux ou regard bas à 45°','Observer la sensation de la respiration à la narine ou à l\'abdomen','Quand l\'esprit part : noter "pensée" et revenir au souffle','Ne pas modifier la respiration — juste observer','En cas d\'agitation : étiqueter "agitation", revenir doucement']},
+{id:'m5',cat:'mindfulness',i:'🎯',t:'3 minutes d\'espace (MBCT)',d:'3 min',desc:'Espace de respiration en 3 étapes pour revenir au moment présent.',s:['Minute 1 : Conscience — "Que se passe-t-il en ce moment ?" Pensées, émotions, sensations','Nommer sans jugement : "Il y a de l\'anxiété", "Il y a une pensée de..."','Minute 2 : Recentrage — Toute l\'attention sur la respiration, chaque inspir/expir','Laisser tout le reste en arrière-plan','Minute 3 : Élargissement — Attention au corps entier, puis à la pièce','Revenir à l\'activité présente avec conscience']},
+{id:'m6',cat:'mindfulness',i:'🌺',t:'Pleine conscience des sons',d:'10 min',desc:'Développer une attention non-jugeante à travers les sons.',s:['Assis, yeux fermés','Ouvrir l\'attention à tous les sons de l\'environnement','Observer les sons sans les étiqueter (ne pas penser "voiture" — juste entendre le son brut)','Si un son déclenche une émotion : observer l\'émotion, revenir au son','Laisser les sons venir et partir sans s\'y accrocher','Explorer la qualité des sons : volume, hauteur, texture']},
+{id:'m7',cat:'mindfulness',i:'💝',t:'Loving-Kindness (Metta)',d:'12 min',desc:'Développer la compassion envers soi et autrui.',s:['Assis, yeux fermés, quelques respirations profondes','Penser à quelqu\'un que vous aimez facilement','"Que tu sois heureux(se), en bonne santé, en sécurité, à l\'aise"','Étendre à vous-même : "Que je sois heureux(se), en bonne santé, en sécurité"','Étendre à une personne neutre, puis difficile','Enfin, à tous les êtres vivants — ondes de bienveillance']},
+{id:'m8',cat:'mindfulness',i:'📦',t:'Observer ses pensées (défusion)',d:'10 min',desc:'Prendre du recul vis-à-vis des pensées — technique ACT/MBCT.',s:['Assis, yeux fermés','Imaginer vos pensées comme des voitures passant sur une route','Vous êtes assis sur un banc, vous observez','Quand une pensée arrive : lui donner une couleur, une forme si vous voulez','Ne pas monter dans la voiture — juste observer son passage','Toute pensée, même intense, est temporaire']},
+{id:'m9',cat:'mindfulness',i:'🌿',t:'Pleine conscience du corps debout',d:'5 min',desc:'Ancrage dans le corps en position debout pour les moments d\'agitation.',s:['Debout, pieds parallèles à la largeur des hanches','Sentir le contact des pieds avec le sol (pression, chaleur)','Observer le balancement naturel du corps (micro-mouvements d\'équilibre)','Attention aux genoux légèrement déverrouillés','Respiration naturelle consciente','Si une pensée vient, revenir aux sensations des pieds']},
+{id:'m10',cat:'mindfulness',i:'🫶',t:'Auto-compassion pleine conscience',d:'10 min',desc:'Intégrer pleine conscience et bienveillance envers soi (Kristin Neff).',s:['Identifier une situation difficile ou une souffrance actuelle','Reconnaître : "C\'est difficile. Je souffre en ce moment." (pleine conscience)','Reconnaître : "La souffrance fait partie de l\'expérience humaine." (humanité commune)','Placer une main sur le cœur et respirer','Dire intérieurement : "Que je sois bienveillant(e) avec moi-même en ce moment"','Quelle phrase de soutien diriez-vous à un ami cher dans cette situation ?']},
+{id:'t1',cat:'tcc',i:'📔',t:'Journal des pensées ABC',d:'15 min',desc:'Identifier et restructurer les pensées automatiques négatives.',s:['A — Situation : Décrire factuellement l\'événement (sans interprétation)','B — Pensée automatique : "Quelle pensée m\'est venue ?" Conviction (0-100%)','C — Émotions : Nommer + intensité (0-100%). Comportement ?','D — Preuves POUR la PA (réelles, factuelles uniquement)','E — Preuves CONTRE la PA','F — Pensée alternative plus équilibrée. Réévaluer l\'émotion (0-100%)']},
+{id:'t2',cat:'tcc',i:'🔽',t:'Flèche descendante',d:'10 min',desc:'Atteindre les croyances profondes à partir d\'une pensée automatique.',s:['Identifier une pensée automatique négative récurrente','Question : "Si c\'était vrai, qu\'est-ce que ça voudrait dire pour vous ?"','Répéter avec chaque réponse jusqu\'à une croyance douloureuse stable','Identifier le type de schéma : abandon, honte, incapacité, danger...','Évaluer la conviction (0-100%) et l\'émotion associée','Travailler ensuite la croyance centrale avec le questionnement socratique']},
+{id:'t3',cat:'tcc',i:'🧪',t:'Expérience comportementale',d:'20 min',desc:'Tester empiriquement si une croyance anxieuse se réalise.',s:['Identifier la prédiction anxieuse précise et sa probabilité estimée (0-100%)','Concevoir l\'expérience de test : quelle action ? Dans quel contexte ?','Réaliser l\'expérience (jeu de rôle d\'abord, puis in vivo)','Observer exactement ce qui s\'est passé (factuel, sans interprétation)','Comparer avec la prédiction initiale','Modifier la croyance en fonction de l\'evidence']},
+{id:'t4',cat:'tcc',i:'🎭',t:'Jeu de rôle inversé',d:'20 min',desc:'Développer l\'empathie et modifier les croyances via le changement de perspective.',s:['Le thérapeute joue le patient (avec ses croyances négatives)','Le patient joue l\'avocat de la défense contre ces croyances','Le patient argumente contre ses propres pensées automatiques','Inverser les rôles si nécessaire','Discussion : comment était-ce plus facile d\'être l\'avocat ?','Identifier les arguments utiles pour la restructuration cognitive']},
+{id:'t5',cat:'tcc',i:'📊',t:'Monitoring de l\'humeur',d:'5 min/jour',desc:'Suivre les variations émotionnelles pour identifier les patterns.',s:['Matin : noter l\'humeur (0-10) et l\'émotion principale','Après-midi : idem','Soir : idem + noter l\'activité principale de la journée','Hebdomadairement : calculer la moyenne, tracer une courbe','Identifier les liens humeur ↔ activités ↔ pensées','Utiliser les données pour ajuster les objectifs thérapeutiques']},
+{id:'t6',cat:'tcc',i:'📝',t:'Prescription d\'activités (AC)',d:'Chaque jour',desc:'Programme d\'activités structuré pour la dépression (activation comportementale).',s:['Lister 10 activités à valence Plaisir (P) et 10 à valence Maîtrise (M)','Évaluer P/M attendu avant de faire l\'activité (0-10)','Réaliser l\'activité — noter P/M ressenti (0-10)','Comparer attendu vs réel (souvent : le réel est meilleur !)','Programmer 1-2 activités P et 1-2 activités M par jour','Augmenter progressivement le niveau de défi chaque semaine']},
+{id:'t7',cat:'tcc',i:'🎯',t:'Hiérarchie d\'exposition',d:'20 min',desc:'Construire et commencer une hiérarchie pour travailler les évitements.',s:['Lister exhaustivement les situations évitées en lien avec le problème','Pour chaque situation, noter les SUDs (0-100)','Classer de 0 à 100 dans un tableau','Identifier les comportements de sécurité à éliminer','Commencer par les items SUDs 25-35','Traiter chaque item jusqu\'à SUDs < 25 avant de passer au suivant']},
+{id:'t8',cat:'tcc',i:'🔍',t:'Analyse de chaîne (DBT)',d:'30 min',desc:'Identifier les antécédents et conséquences d\'un comportement problématique.',s:['Identifier le comportement cible (automutilation, crise, consommation)','Remonter la chaîne : qu\'est-ce qui s\'est passé juste AVANT ?','Et encore avant ? Identifier l\'événement déclencheur initial','Identifier les pensées, émotions et sensations à chaque maillon','Identifier les points d\'intervention possibles dans la chaîne','Co-construire des comportements alternatifs pour chaque point']},
+{id:'t9',cat:'tcc',i:'🌀',t:'Prévention de la rechute',d:'30 min',desc:'Consolider les acquis et préparer l\'après-thérapie.',s:['Bilan des techniques apprises et des progrès réalisés','Identifier les signaux d\'alerte personnels (pensées, comportements précoces)','Élaborer un plan de crise : que faire si les symptômes reviennent ?','Identifier les ressources : qui appeler, quelles techniques prioriser ?','Lettre à soi-même pour le futur : rappeler les acquis et forces','Planifier un suivi d\'espacement (1 mois, 3 mois, 6 mois)']},
+{id:'t10',cat:'tcc',i:'⚙️',t:'Psychoéducation troubles',d:'20 min',desc:'Expliquer au patient la nature de son trouble pour réduire la honte et améliorer l\'alliance.',s:['Expliquer le trouble en termes simples (sans jargon)','Utiliser le modèle biopsychosocial (nature + nature + environnement)','Normaliser : ce trouble est fréquent, il n\'est pas une faiblesse de caractère','Expliquer le mécanisme de maintien (cercle vicieux)','Montrer comment la thérapie va intervenir sur ce mécanisme','Vérifier la compréhension : "Qu\'est-ce que vous en retenez ?']},
+{id:'c1',cat:'corps',i:'🏃',t:'Exercice intense (régulation)',d:'10 min',desc:'Utiliser l\'exercice physique pour réguler une émotion intense (DBT — TIPP).',s:['En cas de crise émotionnelle : choisir un exercice cardio intense','Sprint sur place, jumping jacks, burpees, montées d\'escaliers','Maintenir l\'effort au maximum pendant 10 minutes','L\'adrénaline est brûlée, le SNA se recalibre','Évaluer l\'émotion avant/après (0-10) — souvent réduction significative','Pas un substitut à la gestion émotionnelle à long terme']},
+{id:'c2',cat:'corps',i:'🤸',t:'Étirements de libération',d:'10 min',desc:'Libérer les tensions liées au stress et au trauma stockés dans le corps.',s:['Debout, secouer doucement les mains (30s)','Monter les épaules vers les oreilles → lâcher brutalement (5x)','Incliner la tête à droite 20s, gauche 20s','Rouler les épaules en arrière (5x) puis en avant (5x)','Torsion douce du buste assis : droite 20s, gauche 20s','Secouer tout le corps comme un chien qui se sèche (30s)']},
+{id:'c3',cat:'corps',i:'🦁',t:'Posture de puissance (Cuddy)',d:'5 min',desc:'Modifier la biochimie du stress via la posture corporelle.',s:['Debout, jambes à largeur d\'épaules, légèrement écartées','Mains sur les hanches, poitrine ouverte, menton légèrement levé','Ou bras levés en "V de victoire"','Maintenir 2 minutes (études : ↓ cortisol, ↑ testostérone)','Respirer profondément pendant la posture','Utiliser avant une situation stressante (entretien, examen, prise de parole)']},
+{id:'c4',cat:'corps',i:'👐',t:'EFT — Tapotements',d:'10 min',desc:'Stimuler les méridiens d\'acupuncture en tapotant pour réduire l\'anxiété.',s:['Évaluer l\'émotion (0-10) et formuler : "Même si j\'ai cette anxiété, je m\'accepte"','Tapoter le karaté-point (bord de la main) en répétant la phrase (3x)','Tapoter les méridiens : sommet tête, sourcil, côté œil, sous œil, sous nez, menton, clavicule, sous bras','Répéter un mot-clé à chaque point ("cette anxiété")','1 ronde = 1 cycle. Répéter 3 à 5 cycles','Réévaluer l\'intensité (0-10)']},
+{id:'c5',cat:'corps',i:'🦶',t:'Marche bilatérale thérapeutique',d:'20 min',desc:'Stimulation bilatérale par la marche pour traiter le stress.',s:['Marcher à un rythme régulier, dans un endroit calme','Attention à l\'alternance gauche/droite des pieds','Évoquer doucement un souvenir stressant (pas traumatique) tout en marchant','La stimulation bilatérale aide au retraitement du souvenir','Revenir au présent : arbres, ciel, sensations dans les pieds','Utile pour les "petits t" (stress quotidiens) non traumatiques']},
+{id:'c6',cat:'corps',i:'🌊',t:'Tremblements TRE (Berceli)',d:'10 min',desc:'Libérer les tensions chroniques par les tremblements naturels du corps.',s:['Allongé sur le dos, plantes des pieds ensemble (position papillon)','Laisser les genoux tomber vers le sol et remonter lentement (10x)','Progressivement les jambes commencent à trembler légèrement','Ne pas contrôler ou arrêter les tremblements — ils sont naturels','Permettre aux tremblements de se propager dans le corps entier','Après 5-10 min : allonger les jambes et observer le calme du corps']},
+{id:'e1',cat:'emotion',i:'💝',t:'Auto-compassion (Neff)',d:'10 min',desc:'Développer la bienveillance envers soi — antidote à la honte et à l\'autocritique.',s:['Identifier une situation difficile ou une souffrance actuelle','Reconnaître : "C\'est difficile. Je souffre en ce moment." (pleine conscience)','Reconnaître : "La souffrance fait partie de l\'expérience humaine." (humanité commune)','Placer une main sur le cœur et dire : "Que je sois bienveillant(e) avec moi-même"','Quelle phrase diriez-vous à un ami dans cette situation ? La dire à soi-même','Observer les sensations physiques associées à la bienveillance']},
+{id:'e2',cat:'emotion',i:'🌡️',t:'Thermomètre émotionnel',d:'5 min',desc:'Identifier précisément les émotions et leur intensité pour une meilleure régulation.',s:['Sur une échelle 0-10, évaluer l\'intensité de l\'émotion principale','Identifier le nom précis de l\'émotion (tristesse ? déception ? frustration ?)','Identifier la sensation corporelle associée (où dans le corps ?)','Identifier la pensée qui accompagne l\'émotion','Identifier l\'impulsion comportementale (que voulez-vous faire ?)','Décider consciemment de l\'action à entreprendre']},
+{id:'e3',cat:'emotion',i:'🌈',t:'Roue des émotions (Plutchik)',d:'10 min',desc:'Explorer le spectre des émotions pour développer la granularité émotionnelle.',s:['8 émotions de base : joie, confiance, peur, surprise, tristesse, dégoût, colère, anticipation','Chaque émotion a des variations d\'intensité (terreur → peur → appréhension)','Les émotions se combinent : joie + confiance = amour','Exercice : noter 5 émotions ressenties aujourd\'hui avec leur intensité','Identifier les émotions que vous avez tendance à éviter','Travailler à reconnaître et nommer les émotions subtiles']},
+{id:'e4',cat:'emotion',i:'❤️‍🩹',t:'Action opposée (DBT)',d:'15 min',desc:'Modifier une émotion en agissant à l\'opposé de ce qu\'elle commande.',s:['Identifier l\'émotion et son impulsion comportementale','Vérifier : est-ce que cette émotion est justifiée par les faits ?','Identifier l\'action OPPOSÉE à l\'impulsion','Tristesse (impulsion : s\'isoler) → action opposée : contacter quelqu\'un','Honte (impulsion : se cacher) → action opposée : se montrer dans un espace sûr','Colère (impulsion : attaquer) → action opposée : gentillesse, évitement temporaire']},
+{id:'e5',cat:'emotion',i:'🪑',t:'Chaise vide (gestalt)',d:'20 min',desc:'Dialogue avec une partie de soi ou une personne absente.',s:['Deux chaises : une pour le patient, une pour la "partie" (parent, critique intérieur, ancien soi)','Patient assis → parle à la chaise vide comme si l\'autre était présent','Se lever et s\'asseoir sur l\'autre chaise → répondre comme l\'autre','Alterner jusqu\'à un dialogue fluide','Le thérapeute facilite : "Qu\'a besoin d\'entendre cet enfant intérieur ?"','Terminer sur la chaise du patient, avec une intégration']},
+{id:'e6',cat:'emotion',i:'🔥',t:'Surfer la vague de colère',d:'10 min',desc:'Gérer la colère intense par la conscience et la régulation progressive.',s:['Reconnaître les signaux précoces (chaleur, poitrine serrée, tension mâchoire)','S\'arrêter : "Je prends le temps d\'observer avant d\'agir"','Respiration : 4s inspir, 8s expir — 5 cycles','Observer la colère dans le corps sans la combattre','Se demander : "Qu\'est-ce que cette colère protège ?" (souvent : peur, douleur)','Choisir une réponse assertive plutôt qu\'agressive']},
+{id:'e7',cat:'emotion',i:'📖',t:'Lettre thérapeutique',d:'30 min',desc:'Écrire une lettre à une personne ou à soi-même pour traiter des émotions non exprimées.',s:['Choisir la personne : parent, ex-partenaire, soi dans le passé','Écrire sans censure : tout ce qui n\'a jamais été dit','Commencer par : les faits, les émotions ressenties, l\'impact sur la vie','Ce dont vous avez eu besoin et n\'avez pas reçu','Ce que vous souhaitez aujourd\'hui (pardon ? compréhension ? clôture ?)','Lire à voix haute. Décider si envoyer (souvent : non, c\'est pour soi)']},
+{id:'s1',cat:'sommeil',i:'🌙',t:'Hygiène du sommeil complète',d:'Routine',desc:'Programme comportemental pour rétablir un sommeil de qualité.',s:['Horaires fixes : lever et coucher à la même heure même le week-end','Chambre = sommeil et intimité uniquement (pas de télé, téléphone, travail)','Température idéale : 18-19°C','Lumière bleue : éteindre les écrans 1h avant le coucher','Ritual de détente : bain chaud, lecture, tisane, étirements légers','Si pas endormi après 20 min : se lever, activité calme, retourner au lit quand somnolent']},
+{id:'s2',cat:'sommeil',i:'☁️',t:'Imagerie pré-sommeil',d:'10 min',desc:'Remplacer les ruminations nocturnes par une visualisation apaisante.',s:['Allongé, respirations profondes (cohérence cardiaque 5-5)','Choisir une scène calme et positive (plage, forêt, chemin...)','Enrichir lentement l\'image : lumière, sons, odeurs, températures','Se voir dedans, à l\'aise, sans contrainte','Ne pas forcer le sommeil — laisser venir','Si une rumination revient : noter "rumination" et revenir à l\'image']},
+{id:'s3',cat:'sommeil',i:'🧩',t:'Restriction de sommeil (TCC-I)',d:'Programme',desc:'Thérapie comportementale de l\'insomnie — consolider le sommeil.',s:['Calculer le temps total de sommeil réel (agenda du sommeil 2 semaines)','Fixer l\'heure de coucher selon : heure de lever fixe - temps de sommeil réel','Ex: lever 7h, sommeil réel 5h → coucher à 2h au départ','Ne pas aller au lit avant l\'heure fixée, même fatigué','Si efficacité > 85% : avancer le coucher de 15 min/semaine','Objectif : resynchroniser l\'envie de dormir avec le coucher']},
+{id:'s4',cat:'sommeil',i:'🎯',t:'Contrôle du stimulus (insomnie)',d:'Programme',desc:'Reconnecter le lit au sommeil en éliminant les associations anxiogènes.',s:['Règle 1 : N\'aller au lit que quand somnolent (paupières lourdes, bâillements)','Règle 2 : Si pas endormi après 20 min : se lever, activité calme','Règle 3 : Se lever à heure fixe même si nuit courte','Règle 4 : Pas de sieste pendant la journée (au début)','Règle 5 : Le lit = sommeil (et intimité) uniquement','L\'inconfort à court terme est nécessaire pour la consolidation']},
+{id:'s5',cat:'sommeil',i:'🌟',t:'NSDR (Non-Sleep Deep Rest)',d:'20 min',desc:'Protocole de récupération du système nerveux — Huberman.',s:['Allongé sur le dos, yeux fermés, bras légèrement écartés','Attention dirigée successivement vers chaque partie du corps','Respiration : inspir 5s, expir 10s — douce et naturelle','Laisser les pensées passer sans les suivre','L\'objectif n\'est pas de dormir mais de reposer le SNA','Pratiquer après déjeuner (20 min) ou avant le coucher']},
+{id:'so1',cat:'social',i:'🗣️',t:'Entraînement assertivité (DESC)',d:'20 min',desc:'Exprimer ses besoins et limites de façon claire et respectueuse.',s:['D — Décrire : "Quand tu arrives en retard à nos rendez-vous..."','E — Exprimer : "Je me sens déçu(e) et peu important(e) pour toi"','S — Spécifier : "J\'aimerais que tu me prévienne si tu seras en retard"','C — Conséquences positives : "Ainsi nous passerions un meilleur moment"','Pratiquer en jeu de rôle d\'abord','Identifier les situations à travailler en priorité (hiérarchie)']},
+{id:'so2',cat:'social',i:'👂',t:'Écoute active (Rogers)',d:'15 min',desc:'Développer la qualité de présence et d\'écoute dans les relations.',s:['Présence totale : poser le téléphone, contact visuel, corps tourné vers l\'autre','Écouter pour comprendre, pas pour répondre','Reformuler : "Si j\'ai bien compris, tu ressens..."','Reflet émotionnel : "Il me semble que tu es... frustré, blessé, épuisé ?"','Questions ouvertes : "Comment as-tu vécu ça ?"','Ne pas : conseiller prématurément, minimiser, rassurer, parler de soi']},
+{id:'so3',cat:'social',i:'🤝',t:'Préparation situation sociale anxiogène',d:'20 min',desc:'Réduire l\'anxiété sociale anticipatoire et améliorer les performances.',s:['Identifier la situation sociale redoutée précisément','Évaluer l\'anxiété anticipatoire (0-10) et la pensée catastrophiste','Identifier les comportements de sécurité à éliminer','Jeu de rôle : simuler la situation (avec thérapeute ou imaginairement)','Répéter 3 à 5 fois jusqu\'à réduction des SUDs','Plan B : que faire si l\'anxiété monte ? (mini-plan de gestion)']},
+{id:'so4',cat:'social',i:'🌐',t:'Réseau de soutien social',d:'20 min',desc:'Cartographier et renforcer son réseau de soutien.',s:['Dessiner un cercle avec soi au centre','1er cercle : personnes très proches (intimité, confiance totale)','2e cercle : amis et famille proches (soutien régulier)','3e cercle : connaissances (soutien ponctuel)','4e cercle : professionnels (médecin, thérapeute, coach)','Identifier les lacunes et les ressources à développer']}
+];
+let exCat='all',exSearch='';
+function renderExGrid(cat){
+  exCat=cat;
+  const g=document.getElementById('ex-grid');
+  let l=EX;
+  if(cat!=='all')l=l.filter(e=>e.cat===cat);
+  if(exSearch)l=l.filter(e=>e.t.toLowerCase().includes(exSearch)||e.desc.toLowerCase().includes(exSearch));
+  g.innerHTML=l.map(e=>`<div class="exc" onclick="openEx('${e.id}')">
+    <div class="exi">${e.i}</div>
+    <div class="ext">${e.t}</div>
+    <div class="exd">${e.desc}</div>
+    <div class="exdu">⏱ ${e.d}</div>
+  </div>`).join('');
+}
+function filterExC(cat,el){atab(document.querySelectorAll('#s-exercices .tab'),el);renderExGrid(cat);}
+function filterEx(v){exSearch=v.toLowerCase();renderExGrid(exCat);}
+function openEx(id){
+  const ex=EX.find(e=>e.id===id);if(!ex)return;
+  document.getElementById('exMT').textContent=ex.i+' '+ex.t;
+  document.getElementById('exMB').innerHTML=`<div class="ib ibs" style="margin-bottom:1rem">${ex.desc} — <strong>⏱ ${ex.d}</strong></div>
+    ${ex.s.map((s,i)=>`<div class="step"><div class="stn">${i+1}</div><div class="std">${s}</div></div>`).join('')}
+    <div style="margin-top:1.25rem;text-align:center"><button class="btn bp" onclick="markEx('${id}')">✓ Marquer comme fait</button></div>`;
+  document.getElementById('exModal').classList.add('open');
+}
+function markEx(id){ST.ex.add(id);ST.pts+=5;upStats();document.getElementById('exModal').classList.remove('open');}
+function closeExM(){document.getElementById('exModal').classList.remove('open');}
+// ===== TDAH =====
+const TDAH_C={
+fiche:`<div class="sph sp1"><div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.15em;opacity:0.7;margin-bottom:0.4rem">Neurodéveloppement — F90</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;margin-bottom:0.3rem">TDAH</div><div style="opacity:0.8;font-size:0.85rem">Trouble Déficitaire de l'Attention avec ou sans Hyperactivité | Prévalence : 5-7% enfants, 2.5-4% adultes</div></div>
+<div class="g2">
+<div class="card"><div class="ct">Critères Diagnostiques DSM-5</div>
+<div class="ib ibb"><strong>Inattention (≥ 6/9, ou ≥ 5 si ≥ 17 ans)</strong><br>Fautes d\'inattention, difficultés de concentration, non à l\'écoute, ne suit pas les instructions, désorganisé, évite les tâches mentales soutenues, perd ses affaires, distrait, oublieux</div>
+<div class="ib ibt"><strong>Hyperactivité-Impulsivité (≥ 6/9)</strong><br>Agitation (pieds, mains), se lève, court/grimpe, bruyant, parle trop, donne les réponses avant la fin, difficulté à attendre, interrompt</div>
+<div class="ib ibg"><strong>Conditions :</strong> ≥ 2 contextes / Début avant 12 ans / Retentissement fonctionnel / Non expliqué par autre trouble<br><strong>3 présentations :</strong> Inattention prédominante / Hyperactivité-Impulsivité prédominante / Combinée</div>
+</div>
+<div class="card"><div class="ct">Manifestations selon l'âge</div>
+<div class="tl"><div class="tlt">Enfant (6-12 ans)</div><div class="tlb">Agitation visible, difficultés scolaires, impulsivité (conflits pairs), devoirs catastrophiques, oubli du matériel, difficulté à attendre</div></div>
+<div class="tl"><div class="tlt">Adolescent (13-17 ans)</div><div class="tlb">Hyperactivité souvent intériorisée, procrastination, risques (conduite, substances), mauvaise gestion du temps, estime de soi fragile</div></div>
+<div class="tl"><div class="tlt">Adulte (18+)</div><div class="tlb">Désorganisation chronique, difficultés pro, relations instables, hypersensibilité émotionnelle (DEA), procrastination chronique, addiction possible</div></div>
+</div>
+<div class="card"><div class="ct">Comorbidités fréquentes</div>
+<ul class="fl">
+<li>Trouble oppositionnel avec provocation (TOP) — 50% des TDAH enfants</li>
+<li>Troubles des apprentissages (dyslexie, dyspraxie) — 25-35%</li>
+<li>Trouble anxieux — 25-50%</li>
+<li>Trouble dépressif — 15-30%</li>
+<li>TSA — 20-50% (comorbidité fréquente)</li>
+<li>Troubles du sommeil — 70%</li>
+</ul>
+</div>
+<div class="card"><div class="ct">Outils Diagnostiques</div>
+<div class="tl"><div class="tlt">Conners 3 (enfant)</div><div class="tlb">Échelle multi-informateurs (parent, enseignant, enfant). Gold standard pédiatrique.</div></div>
+<div class="tl"><div class="tlt">ASRS (adulte)</div><div class="tlb">Adult ADHD Self-Report Scale (Kessler). 18 items. Version courte 6 items pour dépistage.</div></div>
+<div class="tl"><div class="tlt">BRIEF (fonctions exécutives)</div><div class="tlb">Behavior Rating Inventory of Executive Function. Évalue inhibition, flexibilité, mémoire de travail, organisation.</div></div>
+</div>
+</div>`,
+carte:`<div class="mmap"><div style="text-align:center;margin-bottom:1.25rem"><span class="mmc">TDAH</span></div>
+<div class="mmg">
+<div class="mmb bc"><div class="mmbt">⚡ Causes</div><div class="mmi">Génétique (héritabilité 70-80%)</div><div class="mmi">Dysfonction dopamine/noradrénaline CPF</div><div class="mmi">Prématurité, faible poids naissance</div><div class="mmi">Exposition in utero (tabac, alcool)</div><div class="mmi">Traumatismes crâniens</div><div class="mmi">Facteurs environnementaux</div></div>
+<div class="mmb by"><div class="mmbt">🔴 Symptômes</div><div class="mmi">Inattention / distractibilité</div><div class="mmi">Hyperactivité motrice ou interne</div><div class="mmi">Impulsivité (actes, paroles)</div><div class="mmi">Désorganisation chronique</div><div class="mmi">Procrastination</div><div class="mmi">Hyperfocus (intérêts)</div><div class="mmi">Dysrégulation émotionnelle</div></div>
+<div class="mmb bd"><div class="mmbt">🔍 Diagnostic différentiel</div><div class="mmi">TAG (inattention liée à l\'anxiété)</div><div class="mmi">Dépression (ralentissement cognitif)</div><div class="mmi">TSA (attention, social)</div><div class="mmi">Troubles du sommeil</div><div class="mmi">Hypothyroïdie</div><div class="mmi">Haut potentiel intellectuel</div></div>
+<div class="mmb btr"><div class="mmbt">✅ Traitements</div><div class="mmi">Méthylphénidate (Ritaline, Concerta)</div><div class="mmi">Amphétamines (Vyvanse — adulte)</div><div class="mmi">Atomoxétine (non-stimulant)</div><div class="mmi">TCC adaptée TDAH</div><div class="mmi">Coaching TDAH</div><div class="mmi">Aménagements scolaires / pro</div><div class="mmi">Psychoéducation famille</div></div>
+</div></div>`,
+outils:`<div class="g2">
+<div class="card"><div class="ct">⚙️ Stratégies Organisationnelles</div>
+<div class="tl"><div class="tlt">Timer Pomodoro adapté</div><div class="tlb">25 min travail → 5 min pause. Pour TDAH sévère : commencer par 10 min. Timer analogique visible. Structurer la journée en blocs.</div></div>
+<div class="tl"><div class="tlt">Externalisation de la mémoire</div><div class="tlb">Listes partout, agenda papier + numérique, post-its visuels, tableau blanc. Le cerveau TDAH ne peut pas tout retenir dans la mémoire de travail.</div></div>
+<div class="tl"><div class="tlt">Décomposition des tâches</div><div class="tlb">"Comment manger un éléphant ? Un morceau à la fois." Décomposer en sous-étapes de 5-10 min maximum.</div></div>
+<div class="tl"><div class="tlt">Body doubling</div><div class="tlb">Travailler en présence d'une autre personne (bibliothèque, café, Focusmate en ligne). La présence d'autrui aide à maintenir l'attention.</div></div>
+</div>
+<div class="card"><div class="ct">🧠 Gestion des Fonctions Exécutives</div>
+<div class="tl"><div class="tlt">Inhibition : STOPP</div><div class="tlb">Stop → Take a breath → Observe → Pull back → Proceed. Pour gérer l'impulsivité.</div></div>
+<div class="tl"><div class="tlt">Mémoire de travail</div><div class="tlb">Écrire immédiatement toute idée/tâche. Application note vocale. Répétition espacée. Cartes mentales visuelles.</div></div>
+<div class="tl"><div class="tlt">Planification à rebours</div><div class="tlb">Partir de la date butoir et remonter : "Qu'est-ce qui doit être fait AVANT ça ?" Écrire l'agenda à rebours pour mieux estimer le temps.</div></div>
+</div>
+<div class="card"><div class="ct">💙 Dysrégulation Émotionnelle (DEA)</div>
+<div class="ib ibb">La DEA est présente dans 70-80% des TDAH adultes — souvent plus invalidante que l'inattention</div>
+<div class="tl"><div class="tlt">Temps mort émotionnel</div><div class="tlb">En cas de montée émotionnelle : s'accorder 20 minutes avant de réagir. L'émotion TDAH initiale est souvent disproportionnée et se régule rapidement.</div></div>
+<div class="tl"><div class="tlt">Boîte à outils d'urgence</div><div class="tlb">Liste personnalisée de 5 techniques courtes (respiration, marche, musique, eau froide, contact téléphonique). Accessible immédiatement.</div></div>
+</div>
+<div class="card"><div class="ct">🏫 Aménagements & Droits</div>
+<ul class="fl">
+<li>PAP (Plan d'Accompagnement Personnalisé) à l'école</li>
+<li>Tiers-temps aux examens</li>
+<li>RQTH pour les adultes en emploi</li>
+<li>Coach TDAH (compétences exécutives)</li>
+<li>Applications : Goblin Tools, Focusmate, Forest, Todoist</li>
+</ul>
+</div>
+</div>`,
+exercices:`<div class="g2">
+<div class="card"><div class="ct">🎯 Règle des 2 minutes</div>
+<div class="ib ibb">Si ça prend moins de 2 minutes → faites-le MAINTENANT</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Observer</div><div class="std">Identifier les petites tâches qui s'accumulent (répondre à un mail, ranger un objet)</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Évaluer</div><div class="std">Peut-on le faire en moins de 2 minutes ? Si oui : MAINTENANT</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Récompense</div><div class="std">Cocher sur une liste. Visualiser les micro-victoires — elles s'accumulent</div></div></div>
+</div>
+<div class="card"><div class="ct">🌊 Focus structuré (TDAH)</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Éliminer les distractions</div><div class="std">Téléphone en mode avion, notifications off, casque anti-bruit</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Intention claire</div><div class="std">Post-it : "En ce moment, je travaille sur : [tâche précise]"</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Timer 10-25 min</div><div class="std">Si distrait : noter la distraction sur un papier, revenir à la tâche</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Pause structurée</div><div class="std">5 min de pause physique (se lever, bouger), puis nouveau bloc</div></div></div>
+</div>
+<div class="card"><div class="ct">🏃 Mouvement comme régulateur</div>
+<div class="ib ibt">Exercice aérobie 3×/semaine = effet comparable au méthylphénidate faible dose</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Avant une tâche difficile</div><div class="std">5-10 min de mouvement intense (sauts, marche rapide) pour activer le CPF</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">En cas d'agitation</div><div class="std">Fidget tools (balle, toupie) pour canaliser l'énergie sans perturber</div></div></div>
+</div>
+<div class="card"><div class="ct">📓 Journal TDAH quotidien</div>
+<div class="step"><div class="stn">AM</div><div><div class="stt">Matin (5 min)</div><div class="std">3 priorités du jour. 1 défi prévu. 1 chose pour prendre soin de moi.</div></div></div>
+<div class="step"><div class="stn">PM</div><div><div class="stt">Mi-journée (2 min)</div><div class="std">Suis-je sur la bonne voie ? Que dois-je ajuster ?</div></div></div>
+<div class="step"><div class="stn">S</div><div><div class="stt">Soir (5 min)</div><div class="std">3 choses accomplies (même petites). 1 apprentissage. Préparer le lendemain.</div></div></div>
+</div>
+</div>`,
+qcm:`<div id="tdah-qcm-c"></div>`};
+const TDAHQ=[
+{q:'Le TDAH est un trouble :',o:['Psychiatrique acquis','Neurodéveloppemental à base neurobiologique','De la personnalité','Dû à une mauvaise éducation'],c:1,exp:'TDAH : trouble neurodéveloppemental (héritabilité 70-80%) lié à une dysfonction du système dopaminergique/noradrénergique dans le cortex préfrontal. Ce n\'est pas un "manque de volonté".'},
+{q:'Quel symptôme est central dans le TDAH adulte type inattentif ?',o:['Hyperactivité motrice','Procrastination chronique et désorganisation','Crises d\'impulsivité','Tics vocaux'],c:1,exp:'Chez l\'adulte, l\'hyperactivité motrice s\'intériorise. Les manifestations dominantes sont : procrastination, désorganisation, gestion du temps difficile, oublis fréquents, DEA (dysrégulation émotionnelle associée).'},
+{q:'Le méthylphénidate agit en :',o:['Bloquant les récepteurs GABA','Inhibant la recapture de dopamine et noradrénaline','Augmentant la sérotonine','Bloquant les récepteurs dopaminergiques'],c:1,exp:'Le méthylphénidate inhibe les transporteurs DAT (dopamine) et NET (noradrénaline), augmentant leur disponibilité dans le cortex préfrontal, améliorant les fonctions exécutives.'},
+{q:'Le "hyperfocus" dans le TDAH est :',o:['Impossible pour les personnes TDAH','Une capacité de concentration intense sur des sujets d\'intérêt','Un symptôme pathologique à traiter','Une manifestation d\'anxiété'],c:1,exp:'Le hyperfocus est paradoxal : capacité à se concentrer intensément pendant des heures sur des activités passionnantes. Ce n\'est pas pathologique mais peut poser problème si la personne "oublie" ses autres obligations.'},
+{q:'L\'intervention recommandée pour le TDAH enfant combine :',o:['Médicaments seuls','Psychothérapie seule','Médicaments + interventions psychosociales (TCC, parent-training, aménagements)','Régime alimentaire spécifique'],c:2,exp:'Traitement multimodal : méthylphénidate (si ≥ 6 ans) + parent training + TCC adaptée (habiletés organisationnelles) + aménagements scolaires. Les interventions psychosociales seules peuvent suffire chez l\'enfant < 6 ans.'}
+];
+function showTDAH(k,el){
+  atab(document.querySelectorAll('#s-tdah .tab'),el);
+  document.getElementById('tdah-c').innerHTML=TDAH_C[k];
+  if(k==='qcm'){
+    document.getElementById('tdah-qcm-c').innerHTML=TDAHQ.map((q,qi)=>`<div class="card">
+      <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.75rem">${qi+1}. ${q.q}</div>
+      ${q.o.map((o,oi)=>`<button class="opt" id="tdq${qi}_${oi}" onclick="ansSpec('td',${qi},${oi})"><span class="ol">${String.fromCharCode(65+oi)}</span>${o}</button>`).join('')}
+      <div class="fb" id="tdfb${qi}"><div class="fw" id="tdfbt${qi}"></div><div style="margin-top:0.25rem" id="tdfbx${qi}"></div></div>
+    </div>`).join('');
+  }
+}
+
+// ===== TSA =====
+const TSA_C={
+fiche:`<div class="sph sp2"><div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.15em;opacity:0.7;margin-bottom:0.4rem">Neurodéveloppement — F84</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;margin-bottom:0.3rem">TSA</div><div style="opacity:0.8;font-size:0.85rem">Trouble du Spectre de l'Autisme | Prévalence : ~1% | Ratio H/F : 4:1 (sous-diagnostiqué chez filles)</div></div>
+<div class="g2">
+<div class="card"><div class="ct">Critères Diagnostiques DSM-5</div>
+<div class="ib ibv"><strong>Domaine A — Déficits sociaux-communicatifs (tous 3 requis)</strong><br>A1. Déficits de réciprocité socio-émotionnelle<br>A2. Déficits de communication non-verbale (contact visuel, gestes, expressions)<br>A3. Déficits dans le développement des relations</div>
+<div class="ib ibt"><strong>Domaine B — Comportements répétitifs/restreints (≥ 2/4)</strong><br>B1. Mouvements/paroles stéréotypés (écholalie, flapping)<br>B2. Insistance sur la similitude, routines rigides<br>B3. Intérêts très restreints, hyper-intenses<br>B4. Hyper/hyposensibilité sensorielle</div>
+<div class="ib ibg"><strong>Niveaux de soutien :</strong> Niveau 1 — besoin d'aide / Niveau 2 — besoin d'aide importante / Niveau 3 — besoin d'aide très importante</div>
+</div>
+<div class="card"><div class="ct">Le Masking (Camouflage)</div>
+<div class="ib ibv">Particulièrement présent chez les femmes TSA et les personnes TSA niveau 1</div>
+<div class="tl"><div class="tlt">Définition</div><div class="tlb">Stratégie (inconsciente ou consciente) de dissimulation des traits autistiques pour s'intégrer socialement (imiter les neurotypiques, masquer le stimming, forcer le contact visuel)</div></div>
+<div class="tl"><div class="tlt">Conséquences</div><div class="tlb">Épuisement intense, anxiété chronique, identité floue, retard diagnostique moyen de 10-15 ans chez les femmes, risque de burnout autistique</div></div>
+<div class="tl"><div class="tlt">Approche thérapeutique</div><div class="tlb">Permettre progressivement de se "unmasker" dans des environnements sûrs. Validation de l'identité autistique. Réduction du masking dans les espaces privés.</div></div>
+</div>
+<div class="card"><div class="ct">Profil Sensoriel</div>
+<div class="tl"><div class="tlt">Hypersensibilité (sur-réactivité)</div><div class="tlb">Lumières fluorescentes, bruits forts, textures alimentaires, étiquettes vêtements, foule. → Évitement, meltdown, shutdown</div></div>
+<div class="tl"><div class="tlt">Hyposensibilité (sous-réactivité)</div><div class="tlb">Seuil douloureux élevé, recherche de stimulations intenses (pression profonde, balancement)</div></div>
+<div class="tl"><div class="tlt">Stimming</div><div class="tlb">Balancement, flapping, tapping — régulation sensorielle/émotionnelle. À ne pas supprimer sans comprendre la fonction.</div></div>
+</div>
+<div class="card"><div class="ct">Comorbidités TSA</div>
+<ul class="fl">
+<li>Trouble anxieux — 40-60% (le plus fréquent)</li>
+<li>TDAH — 20-50% (comorbidité autorisée DSM-5 depuis 2013)</li>
+<li>Dépression — 30-50% (souvent secondaire à l'exclusion sociale)</li>
+<li>Troubles du sommeil — 50-80%</li>
+<li>Troubles gastro-intestinaux — 30-40%</li>
+</ul>
+</div>
+</div>`,
+carte:`<div class="mmap"><div style="text-align:center;margin-bottom:1.25rem"><span class="mmc">TSA</span></div>
+<div class="mmg">
+<div class="mmb bc"><div class="mmbt">⚡ Causes</div><div class="mmi">Génétique (héritabilité 70-90%)</div><div class="mmi">Mutations de novo (spontanées)</div><div class="mmi">Facteurs prénataux (valproate)</div><div class="mmi">Âge parental avancé</div><div class="mmi">Prématurité, faible poids</div><div class="mmi">Dysconnectivité cérébrale atypique</div></div>
+<div class="mmb by"><div class="mmbt">🔴 Manifestations</div><div class="mmi">Déficits sociaux-communicatifs</div><div class="mmi">Écholalie (immédiate ou différée)</div><div class="mmi">Stimming (mouvements répétitifs)</div><div class="mmi">Routines rigides</div><div class="mmi">Intérêts spéciaux intensifs</div><div class="mmi">Hypersensibilité sensorielle</div><div class="mmi">Meltdown / Shutdown</div><div class="mmi">Masking / Camouflage</div></div>
+<div class="mmb bd"><div class="mmbt">🔍 Outils diagnostiques</div><div class="mmi">M-CHAT-R (18-24 mois)</div><div class="mmi">ADOS-2 (gold standard)</div><div class="mmi">ADI-R (entretien parents)</div><div class="mmi">CARS-2</div><div class="mmi">Profil sensoriel (SP2)</div><div class="mmi">Bilan neuropsychologique complet</div></div>
+<div class="mmb btr"><div class="mmbt">✅ Accompagnement</div><div class="mmi">ABA (thérapie comportementale)</div><div class="mmi">Ergothérapie (sensoriel)</div><div class="mmi">Orthophonie (communication)</div><div class="mmi">TCC adaptée TSA</div><div class="mmi">PECS (communication alternative)</div><div class="mmi">TEACCH (structure visuelle)</div><div class="mmi">Psychoéducation famille</div></div>
+</div></div>`,
+outils:`<div class="g2">
+<div class="card"><div class="ct">🌟 Adaptations Environnementales</div>
+<div class="tl"><div class="tlt">Organisation visuelle (TEACCH)</div><div class="tlb">Emploi du temps visuel (pictogrammes/photos), boîtes de travail étiquetées, séquences d'activités en images. Le visuel réduit l'incertitude et l'anxiété.</div></div>
+<div class="tl"><div class="tlt">Espace sensoriel dédié</div><div class="tlb">Coin calme avec éclairage tamisé, coussins de pression, objets à manipuler. Accès libre quand surchargé.</div></div>
+<div class="tl"><div class="tlt">Préparation aux transitions</div><div class="tlb">Prévenir à l'avance (5 min, 2 min, 1 min). Timer visuel (Time Timer). Social story avant une nouveauté. "D'abord X, ensuite Y".</div></div>
+</div>
+<div class="card"><div class="ct">💬 Communication Alternative</div>
+<div class="tl"><div class="tlt">PECS</div><div class="tlb">Picture Exchange Communication System : échange de pictogrammes pour personnes non-verbales. Phase 1 : échanger une image pour un objet. Progresse vers la construction de phrases.</div></div>
+<div class="tl"><div class="tlt">AAC numérique</div><div class="tlb">Applications : Proloquo2Go, Grid3, Cboard. Voix de synthèse. Expression même lors des périodes de faible communication verbale.</div></div>
+<div class="tl"><div class="tlt">Langage clair et direct</div><div class="tlb">Éviter métaphores, sarcasme, sous-entendus. Instructions simples, directes, positives ("fais X" plutôt que "arrête de faire Y").</div></div>
+</div>
+<div class="card"><div class="ct">🧩 Meltdown vs Shutdown</div>
+<div class="ib ibv"><strong>Meltdown :</strong> réaction explosive de surcharge (cris, agitation)<br><strong>Shutdown :</strong> retrait, mutisme, immobilité (surcharge internalisée)</div>
+<div class="tl"><div class="tlt">Prévention</div><div class="tlb">Identifier les déclencheurs, respecter les niveaux d'énergie, planifier des temps de récupération.</div></div>
+<div class="tl"><div class="tlt">Pendant</div><div class="tlb">Rester calme, réduire stimuli, espace sécurisant, ne pas exiger de communication. Sécurité d'abord.</div></div>
+<div class="tl"><div class="tlt">Après</div><div class="tlb">Temps de récupération sans jugement. Pas de débriefing immédiat. Analyser les déclencheurs à froid.</div></div>
+</div>
+<div class="card"><div class="ct">🏫 Aménagements & Droits</div>
+<ul class="fl">
+<li>MDPH : reconnaissance du handicap, AESH</li>
+<li>PPS (Projet Personnalisé de Scolarisation)</li>
+<li>ULIS, IME, SESSAD selon les besoins</li>
+<li>RQTH pour les adultes en emploi</li>
+<li>Emploi accompagné (Hanploi, associations)</li>
+</ul>
+</div>
+</div>`,
+exercices:`<div class="g2">
+<div class="card"><div class="ct">🌟 Régulation sensorielle</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Inventaire sensoriel</div><div class="std">Lister les stimuli agréables et désagréables dans chaque modalité (visuel, auditif, tactile, olfactif)</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Échelle d'activation 1-5</div><div class="std">Vert (calme) / Jaune (alerte) / Orange (anxieux) / Rouge (crise) — apprendre à s'auto-évaluer</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Boîte à outils sensorielle</div><div class="std">Créer une boîte avec objets régulateurs personnels (casque, fidget, tissu, parfum apaisant)</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Plan d'action par niveau</div><div class="std">Jaune → pause 10 min. Orange → espace calme 20 min. Rouge → sortie de situation.</div></div></div>
+</div>
+<div class="card"><div class="ct">📖 Social Stories (Carol Gray)</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Identifier la situation difficile</div><div class="std">Situation sociale anxiogène ou incomprise (médecin, jeu en groupe, cantine)</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Rédiger l'histoire</div><div class="std">À la 1re personne, phrases descriptives (ce qui se passe), perspectives (ce que pensent les autres), directives (ce que je peux faire)</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Illustrer si utile</div><div class="std">Images, photos, pictogrammes selon le niveau de compréhension</div></div></div>
+<div class="step"><div class="stn">4</div><div><div class="stt">Lire avant la situation</div><div class="std">Lire ensemble avant la situation. Réviser régulièrement.</div></div></div>
+</div>
+<div class="card"><div class="ct">🧘 Relaxation adaptée TSA</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Pression profonde</div><div class="std">Couverture lestée, massage ferme des épaules — stimule le système proprioceptif, réducteur d'anxiété prouvé</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Stimming régulateur</div><div class="std">Permettre et encourager le stimming dans les espaces appropriés — régulateur naturel</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Respiration visuelle</div><div class="std">Repères visuels pour guider la respiration (pinceau qui monte/descend, pinwheel/moulin à vent)</div></div></div>
+</div>
+<div class="card"><div class="ct">🎮 Compétences Sociales (TCC adaptée)</div>
+<div class="step"><div class="stn">1</div><div><div class="stt">Règles implicites explicites</div><div class="std">Expliquer les règles sociales non-dites de façon explicite (pourquoi le contact visuel, comment détecter la fin d'une conversation)</div></div></div>
+<div class="step"><div class="stn">2</div><div><div class="stt">Scénarios-vidéo</div><div class="std">Regarder des extraits et analyser : "Que ressent ce personnage ?" "Pourquoi a-t-il fait ça ?"</div></div></div>
+<div class="step"><div class="stn">3</div><div><div class="stt">Jeux de rôle structurés</div><div class="std">Pratiquer des scripts de conversation dans des situations spécifiques. Feedback précis et bienveillant.</div></div></div>
+</div>
+</div>`,
+qcm:`<div id="tsa-qcm-c"></div>`};
+const TSAQ=[
+{q:'L\'outil de dépistage TSA recommandé entre 18 et 24 mois est :',o:['ADOS-2','M-CHAT-R','WISC-V','Vineland'],c:1,exp:'Le M-CHAT-R (Modified Checklist for Autism in Toddlers, Revised) : 20 items. Score ≥ 3 → entretien de suivi ; score ≥ 8 → référence diagnostique immédiate.'},
+{q:'Le "masking" dans le TSA désigne :',o:['La dissimulation des comportements autistiques pour s\'intégrer','Un trouble de la mémoire','Une technique de relaxation','Un outil d\'évaluation'],c:0,exp:'Masking/camouflage : stratégie (souvent inconsciente) de dissimulation des traits autistiques. Particulièrement présent chez les femmes TSA, il entraîne un épuisement intense et retarde le diagnostic de 10-15 ans.'},
+{q:'La différence entre meltdown et shutdown :',o:['Le meltdown est interne, le shutdown est externe','Le meltdown est une réaction explosive, le shutdown est un retrait','Ce sont les mêmes phénomènes','Le meltdown est un trouble psychiatrique'],c:1,exp:'Meltdown : réaction de surcharge externalisée (agitation, cris). Shutdown : réaction internalisée (retrait, mutisme). Les deux sont des réponses à une surcharge sensorielle ou émotionnelle.'},
+{q:'L\'approche TEACCH est particulièrement adaptée pour :',o:['Les troubles anxieux','Organiser l\'environnement pour réduire l\'anxiété TSA','Traiter les hallucinations','Le TDAH sans TSA'],c:1,exp:'TEACCH : programme utilisant des supports visuels (emploi du temps pictographique, organisation spatiale claire) pour réduire l\'incertitude et aider les personnes TSA à comprendre leur environnement.'},
+{q:'Les comportements de stimming dans le TSA doivent être :',o:['Systématiquement supprimés','Ignorés complètement','Compris dans leur fonction et adaptés selon le contexte','Médicamentés'],c:2,exp:'Le stimming a des fonctions importantes : régulation sensorielle, régulation émotionnelle, expression. La suppression systématique est aujourd\'hui remise en question. L\'approche moderne : comprendre la fonction, permettre le stimming dans des espaces appropriés.'}
+];
+function showTSA(k,el){
+  atab(document.querySelectorAll('#s-tsa .tab'),el);
+  document.getElementById('tsa-c').innerHTML=TSA_C[k];
+  if(k==='qcm'){
+    document.getElementById('tsa-qcm-c').innerHTML=TSAQ.map((q,qi)=>`<div class="card">
+      <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.75rem">${qi+1}. ${q.q}</div>
+      ${q.o.map((o,oi)=>`<button class="opt" id="tsq${qi}_${oi}" onclick="ansSpec('ts',${qi},${oi})"><span class="ol">${String.fromCharCode(65+oi)}</span>${o}</button>`).join('')}
+      <div class="fb" id="tsfb${qi}"><div class="fw" id="tsfbt${qi}"></div><div style="margin-top:0.25rem" id="tsfbx${qi}"></div></div>
+    </div>`).join('');
+  }
+}
+const specDone={};
+function ansSpec(p,qi,oi){
+  const k=p+qi;if(specDone[k])return;specDone[k]=true;
+  const q=p==='td'?TDAHQ[qi]:TSAQ[qi];
+  for(let i=0;i<q.o.length;i++){const b=document.getElementById(`${p==='td'?'td':'ts'}q${qi}_${i}`);if(b){b.disabled=true;if(i===q.c)b.classList.add('correct');else if(i===oi)b.classList.add('wrong');}}
+  const fb=document.getElementById(`${p==='td'?'td':'ts'}fb${qi}`);if(fb){fb.className='fb show '+(oi===q.c?'fbok':'fberr');document.getElementById(`${p==='td'?'td':'ts'}fbt${qi}`).textContent=oi===q.c?'✓ Correct !':'✗ Pas tout à fait...';document.getElementById(`${p==='td'?'td':'ts'}fbx${qi}`).textContent=q.exp;}
+  ST.qT++;if(oi===q.c){ST.qC++;ST.pts+=10;}upStats();
+}
+
+// ===== INIT =====
+window.addEventListener('load',()=>{
+  renderCas('all');
+  upStats();
+});
+</script>
+</body>
+</html>
